@@ -1,0 +1,185 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 min-h-screen">
+    <div class="mb-16 animate-reveal">
+        <span class="text-blue-500 font-black text-[10px] uppercase tracking-[0.5em]">Analysis </span>
+        <div class="flex justify-between items-end">
+            <h1 class="text-7xl font-black text-main tracking-tighter italic uppercase">COMPARE <br> <span
+                    class="text-muted opacity-30">SPECS.</span></h1>
+
+            @if (compareService.items().length > 0) {
+            <button (click)="compareService.clearCompare()"
+                class="text-red-500 font-bold uppercase tracking-widest text-xs hover:text-red-600 transition-colors">
+                Clear Analysis
+            </button>
+            }
+        </div>
+    </div>
+
+    <!-- AI Analysis Section -->
+    @if (compareService.items().length >= 2) {
+    <div class="mb-16">
+        @if (generatingAnalysis()) {
+        <div class="glass p-12 rounded-[3.5rem] border-blue-500/20 shadow-2xl animate-pulse flex flex-col items-center">
+            <div class="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mb-6"></div>
+            <p class="text-blue-500 font-black text-xs uppercase tracking-[0.5em]">NEXUS AI IS ANALYZING SPECS...</p>
+        </div>
+        } @else if (aiAnalysis()) {
+        <div
+            class="glass p-12 rounded-[3.5rem] border-blue-500/30 shadow-2xl animate-reveal-up relative overflow-hidden group">
+            <!-- Decorative AI Glow -->
+            <div
+                class="absolute -top-24 -right-24 w-64 h-64 bg-blue-500/10 rounded-full blur-[100px] group-hover:bg-blue-500/20 transition-all duration-1000">
+            </div>
+
+            <div class="relative z-10 grid lg:grid-cols-3 gap-12">
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="flex items-center space-x-4">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-xl shadow-blue-500/20">
+                            <i class="fas fa-microchip animate-pulse"></i>
+                        </div>
+                        <h2 class="text-3xl font-black text-main italic uppercase tracking-tighter">AI Analysis Summary
+                        </h2>
+                    </div>
+                    <p class="text-xl text-muted font-medium leading-relaxed italic">
+                        "{{ aiAnalysis()?.summary }}"
+                    </p>
+                    <div class="grid sm:grid-cols-2 gap-4 pt-4">
+                        @for (point of aiAnalysis()?.points; track point) {
+                        <div
+                            class="flex items-start space-x-3 p-4 rounded-2xl bg-white/5 border border-white/5 group/point hover:border-blue-500/30 transition-all">
+                            <i class="fas fa-check-circle text-blue-500 mt-1 text-xs"></i>
+                            <p class="text-[11px] font-bold text-slate-400 leading-normal group-hover/point:text-main">
+                                {{ point }}</p>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <div
+                    class="bg-blue-600 rounded-[2.5rem] p-10 text-white flex flex-col justify-center items-center text-center shadow-2xl shadow-blue-900/50 transform group-hover:scale-[1.02] transition-transform">
+                    <span class="text-[10px] font-black uppercase tracking-[0.4em] mb-4 opacity-70">AI
+                        Recommendation</span>
+                    <h4 class="text-xs font-black uppercase tracking-widest mb-2 opacity-50">Best Overall </h4>
+                    <span class="text-4xl font-black italic uppercase tracking-tighter leading-none mb-6">{{
+                        aiAnalysis()?.winner }}</span>
+                    <button (click)="runAIAnalysis()"
+                        class="text-[9px] font-black uppercase tracking-[0.3em] border border-white/30 px-6 py-3 rounded-xl hover:bg-white hover:text-blue-600 transition-all">
+                        Refresh Node
+                    </button>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+    }
+
+    @if (compareService.items().length > 0) {
+    <div class="overflow-x-auto pb-12 animate-slide-in custom-scrollbar">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr>
+                    <th class="p-6 min-w-[200px] border-b border-glass-border"></th>
+                    @for (product of compareService.items(); track product.id) {
+                    <th class="p-6 min-w-[300px] border-b border-glass-border relative">
+                        <button (click)="compareService.removeFromCompare(product.id)"
+                            class="absolute top-0 right-0 p-4 text-slate-300 hover:text-red-500">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <div class="space-y-4">
+                            <div class="bg-secondary p-8 rounded-3xl flex items-center justify-center">
+                                <img [src]="product.imageUrl" onerror="this.onerror=null; this.src='/assets/images/default.jpg'" class="h-40 object-contain">
+                            </div>
+                            <div>
+                                <h3 class="font-black text-main text-xl italic uppercase leading-tight mb-2">{{
+                                    product.name }}</h3>
+                                <p class="text-red-500 font-black text-2xl">â‚¹{{ product.price.toLocaleString() }}</p>
+                            </div>
+                            <button (click)="addToCart(product)"
+                                class="w-full py-3 gradient-bg text-white rounded-xl font-black text-[10px] uppercase tracking-[0.3em]">
+                                Add to Bag
+                            </button>
+                        </div>
+                    </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rating Row -->
+                <tr>
+                    <td
+                        class="p-6 font-black text-muted uppercase tracking-widest text-xs border-b border-glass-border">
+                        Rating</td>
+                    @for (product of compareService.items(); track product.id) {
+                    <td class="p-6 border-b border-glass-border">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-star text-amber-400"></i>
+                            <span class="font-bold text-main">{{ product.rating }}</span>
+                            <span class="text-xs text-muted">({{ product.reviewsCount }} reviews)</span>
+                        </div>
+                    </td>
+                    }
+                </tr>
+
+                <!-- Highlights Row -->
+                <tr>
+                    <td
+                        class="p-6 font-black text-muted uppercase tracking-widest text-xs border-b border-glass-border">
+                        Highlights</td>
+                    @for (product of compareService.items(); track product.id) {
+                    <td class="p-6 border-b border-glass-border">
+                        <ul class="list-disc list-inside space-y-1">
+                            @for (item of product.features?.slice(0, 3); track item) {
+                            <li class="text-xs font-bold text-slate-500">{{ item }}</li>
+                            }
+                        </ul>
+                    </td>
+                    }
+                </tr>
+
+                <!-- Specs Rows -->
+                @for (feature of getFeatureList(); track feature) {
+                <tr>
+                    <td
+                        class="p-6 font-black text-muted uppercase tracking-widest text-xs border-b border-glass-border">
+                        {{ feature }}</td>
+                    @for (product of compareService.items(); track product.id) {
+                    <td class="p-6 border-b border-glass-border font-bold text-main">
+                        {{ product.specs?.[feature] || '-' }}
+                    </td>
+                    }
+                </tr>
+                }
+
+                <!-- Availability -->
+                <tr>
+                    <td
+                        class="p-6 font-black text-muted uppercase tracking-widest text-xs border-b border-glass-border">
+                        Availability</td>
+                    @for (product of compareService.items(); track product.id) {
+                    <td class="p-6 border-b border-glass-border font-bold">
+                        @if (product.stock > 0) {
+                        <span class="text-emerald-500">In Stock ({{ product.stock }})</span>
+                        } @else {
+                        <span class="text-red-500">Out of Stock</span>
+                        }
+                    </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    } @else {
+    <div class="text-center py-40 glass rounded-[5rem] p-24 border-glass-border shadow-2xl">
+        <div
+            class="w-32 h-32 bg-blue-500/10 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-2xl shadow-blue-500/10">
+            <i class="fas fa-balance-scale text-5xl"></i>
+        </div>
+        <h2 class="text-5xl font-black text-main italic uppercase tracking-tighter">ANALYSIS EMPTY.</h2>
+        <p class="text-xl text-muted font-semibold mt-6 mb-12">Select items from the catalog to initiate comparison .</p>
+        <button routerLink="/products"
+            class="px-12 py-6 bg-blue-600 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-[0.4em] shadow-2xl hover:scale-105 transition-all">
+            BROWSE CATALOG
+        </button>
+    </div>
+    }
+</div>

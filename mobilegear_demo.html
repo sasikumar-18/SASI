@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MobileGear - Ultra Premium Tech Accessories</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --accent: #10b981;
+            --bg-slate: #020617;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-slate);
+            color: #f8fafc;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(168, 85, 247, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #2dd4bf 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-premium {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-premium::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-premium:hover::after {
+            left: 100%;
+        }
+
+        .card-hover {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.6);
+            border-color: rgba(99, 102, 241, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(30px);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .floating-item {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .loading-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen custom-scrollbar selection:bg-indigo-500/30">
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-8 right-8 z-[100] space-y-3"></div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 glass py-6 border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4 cursor-pointer group" onclick="navigate('home')">
+                    <div
+                        class="relative bg-gradient-to-br from-indigo-500 to-purple-600 p-2.5 rounded-2xl shadow-2xl group-hover:scale-110 transition-transform duration-500">
+                        <i class="fas fa-mobile-alt text-2xl text-white"></i>
+                    </div>
+                    <span class="text-2xl font-black tracking-tighter text-white uppercase">MOBILE<span
+                            class="text-indigo-400">GEAR</span></span>
+                </div>
+
+                <div class="hidden lg:flex items-center space-x-12">
+                    <a href="#" onclick="navigate('home')"
+                        class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-white transition-colors">Digital
+                        Home</a>
+                    <a href="#" onclick="navigate('products')"
+                        class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 hover:text-white transition-colors">Catalog</a>
+                </div>
+
+                <div class="flex items-center space-x-6">
+                    <div
+                        class="hidden sm:flex items-center bg-white/5 rounded-2xl px-5 py-2.5 border border-white/10 group focus-within:border-indigo-500/50 transition-all">
+                        <i class="fas fa-search text-slate-600 group-focus-within:text-indigo-400 mr-4 text-sm"></i>
+                        <input type="text" placeholder="Search gear..."
+                            class="bg-transparent border-none outline-none text-sm text-white w-48 placeholder:text-slate-800 font-bold"
+                            onkeyup="handleSearch(event)">
+                    </div>
+
+                    <button onclick="toggleCart()"
+                        class="relative p-3.5 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-all group active:scale-95">
+                        <i class="fas fa-shopping-bag text-xl text-slate-400 group-hover:text-white"></i>
+                        <span id="cart-count"
+                            class="absolute -top-1 -right-1 bg-indigo-500 text-white text-[10px] font-black rounded-lg w-5 h-5 flex items-center justify-center shadow-lg shadow-indigo-500/40">0</span>
+                    </button>
+
+                    <div id="auth-nav"></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-overlay"
+        class="fixed inset-0 bg-black/70 z-[60] hidden backdrop-blur-sm transition-opacity duration-300"
+        onclick="toggleCart()"></div>
+    <div id="cart-sidebar"
+        class="fixed right-0 top-0 h-full w-full md:w-[500px] sidebar z-[70] transform translate-x-full flex flex-col shadow-[-20px_0_100px_rgba(0,0,0,0.8)]">
+        <div class="p-10 flex items-center justify-between border-b border-white/5">
+            <div>
+                <h2 class="text-3xl font-black tracking-tighter uppercase">Digital Bag</h2>
+                <p id="item-count-badge" class="text-[10px] font-black text-indigo-400 uppercase tracking-widest mt-2">
+                    Vault Empty</p>
+            </div>
+            <button onclick="toggleCart()"
+                class="w-14 h-14 flex items-center justify-center rounded-2xl bg-white/5 hover:bg-red-500/10 hover:text-red-500 transition-all border border-white/10">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div id="cart-items" class="flex-1 overflow-y-auto p-10 space-y-8 custom-scrollbar"></div>
+        <div id="cart-footer" class="p-10 bg-black/40 border-t border-white/5"></div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="app" class="max-w-7xl mx-auto px-6 py-10 min-h-[70vh]"></main>
+
+    <!-- Footer -->
+    <footer class="mt-40 border-t border-white/5 bg-black/40 pt-32 pb-12 relative overflow-hidden">
+        <div
+            class="absolute -top-[500px] -left-[200px] w-[800px] h-[800px] bg-indigo-500/5 blur-[150px] -z-10 rounded-full">
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="flex items-center justify-center space-x-3 mb-12">
+                <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-3 rounded-2xl shadow-2xl">
+                    <i class="fas fa-mobile-alt text-2xl text-white"></i>
+                </div>
+                <span class="text-3xl font-black tracking-tighter text-white uppercase italic">MOBILE<span
+                        class="text-indigo-400">GEAR</span></span>
+            </div>
+
+            <div
+                class="flex flex-wrap justify-center gap-10 mb-20 text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">
+                <a href="#" onclick="navigate('home')" class="hover:text-white transition-colors">Home</a>
+                <a href="#" onclick="navigate('products')" class="hover:text-white transition-colors">Catalog</a>
+                <a href="#" class="hover:text-white transition-colors">Philosophy</a>
+                <a href="#" class="hover:text-white transition-colors">Vault Status</a>
+            </div>
+
+            <p class="text-slate-600 text-[10px] font-black uppercase tracking-[0.3em] mb-12">Precision Engineered in
+                the Metaverse &copy; 2024</p>
+
+            <div class="flex justify-center space-x-12 opacity-40 hover:opacity-100 transition-opacity duration-500">
+                <i class="fab fa-instagram text-2xl"></i>
+                <i class="fab fa-twitter text-2xl"></i>
+                <i class="fab fa-facebook-f text-2xl"></i>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ==================== STATE ====================
+        const state = {
+            currentUser: null,
+            cart: [],
+            products: [],
+            orders: [],
+            users: [],
+            currentPage: 'home',
+            searchQuery: '',
+            selectedCategory: 'all',
+            pageData: null
+        };
+
+        const mockProducts = [
+            { id: 1, name: 'MG-01 Silicone Shield', category: 'cases', price: 999, description: 'Medical-grade liquid silicone shell with internalized microfiber architecture. Zero-gap fit.', imageUrl: 'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=400', stock: 50, rating: 4.5, reviews: 128 },
+            { id: 2, name: 'MG-02 Leather Vault', category: 'cases', price: 2499, description: 'Single-source artisan leather frame with integrated secure card modular system.', imageUrl: 'https://images.unsplash.com/photo-1603313011101-320f26d4cc45?w=400', stock: 30, rating: 4.7, reviews: 89 },
+            { id: 3, name: 'MG-X1 Rapid Node 65W', category: 'chargers', price: 1999, description: 'Gallium Nitride semiconductor core. Ultra-low heat emission. Intelligent power negotiation.', imageUrl: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=400', stock: 100, rating: 4.8, reviews: 256 },
+            { id: 4, name: 'MG-W1 Flux Pad', category: 'chargers', price: 1499, description: 'Induction-optimized wireless node. High-precision alignment magnets for MG-compatible gear.', imageUrl: 'https://images.unsplash.com/photo-1615526675159-e248c3021d3f?w=400', stock: 75, rating: 4.4, reviews: 167 },
+            { id: 5, name: 'MG-A1 Sonic Pro Buds', category: 'headphones', price: 6999, description: 'Active frequency isolation. Spatial biometric sound stage. Dynamic driver orientation.', imageUrl: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400', stock: 40, rating: 4.6, reviews: 312 },
+            { id: 6, name: 'MG-A2 Over-Ear Studio', category: 'headphones', price: 12999, description: 'Professional monitoring grade. Carbon fiber exoskeleton. 60-hour operational cycle.', imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400', stock: 25, rating: 4.9, reviews: 198 }
+        ];
+
+        // ==================== CORE logic ====================
+        function init() {
+            loadFromStorage();
+            state.products = mockProducts;
+            renderAuthNav();
+            renderPage();
+            updateCartCount();
+
+            window.addEventListener('scroll', () => {
+                document.querySelectorAll('.reveal').forEach(el => {
+                    if (el.getBoundingClientRect().top < window.innerHeight - 100) el.classList.add('active');
+                });
+            });
+        }
+
+        function loadFromStorage() {
+            const get = (k) => JSON.parse(localStorage.getItem('mg_v2_' + k) || '[]');
+            state.cart = get('cart');
+            state.orders = get('orders');
+            state.users = get('users');
+            state.currentUser = JSON.parse(localStorage.getItem('mg_v2_user') || 'null');
+        }
+
+        function saveToStorage() {
+            const set = (k, v) => localStorage.setItem('mg_v2_' + k, JSON.stringify(v));
+            set('cart', state.cart);
+            set('orders', state.orders);
+            set('users', state.users);
+            localStorage.setItem('mg_v2_user', JSON.stringify(state.currentUser));
+        }
+
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const t = document.createElement('div');
+            const bg = type === 'success' ? 'bg-indigo-600' : 'bg-red-500';
+            t.className = `glass ${bg} px-8 py-4 rounded-2xl shadow-2xl flex items-center space-x-4 border border-white/10 animate-in slide-in-from-right duration-500`;
+            t.innerHTML = `<i class="fas fa-info-circle"></i> <span class="text-xs font-black uppercase tracking-widest">${msg}</span>`;
+            container.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
+
+        function navigate(p, d = null) {
+            state.currentPage = p;
+            state.pageData = d;
+            renderPage();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderPage() {
+            const app = document.getElementById('app');
+            app.classList.add('opacity-0');
+            setTimeout(() => {
+                switch (state.currentPage) {
+                    case 'home': app.innerHTML = renderHome(); break;
+                    case 'products': app.innerHTML = renderProducts(); break;
+                    case 'product-detail': app.innerHTML = renderDetail(); break;
+                    case 'login': app.innerHTML = renderLogin(); break;
+                    case 'orders': app.innerHTML = renderOrders(); break;
+                    case 'checkout': app.innerHTML = renderCheckout(); break;
+                }
+                app.classList.remove('opacity-0');
+                app.classList.add('animate-in', 'fade-in', 'duration-700');
+            }, 300);
+        }
+
+        function renderAuthNav() {
+            const container = document.getElementById('auth-nav');
+            if (state.currentUser) {
+                container.innerHTML = `
+                    <div class="relative group">
+                        <button class="flex items-center space-x-4 glass p-1.5 rounded-2xl hover:bg-white/10 transition-all border border-white/10">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center text-white font-black shadow-lg">
+                                ${state.currentUser.name[0].toUpperCase()}
+                            </div>
+                            <span class="hidden md:inline text-xs font-black uppercase tracking-widest mr-2">${state.currentUser.name}</span>
+                        </button>
+                        <div class="absolute right-0 mt-4 w-60 glass rounded-3xl py-4 hidden group-hover:block border border-white/5 shadow-2xl">
+                            <a href="#" onclick="navigate('orders')" class="block px-8 py-3 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-colors">Digital Vault</a>
+                            <div class="h-px bg-white/5 my-2"></div>
+                            <button onclick="logout()" class="w-full text-left px-8 py-3 text-[10px] font-black uppercase tracking-widest text-red-400 hover:bg-red-500/10 transition-colors">Terminate Protocol</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `<button onclick="navigate('login')" class="px-8 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl shadow-indigo-600/30 active:scale-95 transition-all">Member Login</button>`;
+            }
+        }
+
+        // ==================== PAGE RENDERERS ====================
+        function renderHome() {
+            return `
+                <section class="min-h-[85vh] flex items-center relative overflow-hidden">
+                    <div class="grid lg:grid-cols-2 gap-20 items-center">
+                        <div class="space-y-12">
+                            <div class="inline-flex items-center space-x-4 bg-white/5 px-6 py-3 rounded-full border border-white/10">
+                                <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span></span>
+                                <span class="text-[10px] font-black uppercase tracking-[0.4em] text-indigo-300">New Protocol Online</span>
+                            </div>
+                            <h1 class="text-8xl font-black leading-[0.85] tracking-tighter uppercase italic">Next Gen <span class="gradient-text">Hardware</span></h1>
+                            <p class="text-xl text-slate-500 max-w-lg leading-relaxed font-medium">Precision gear engineered for the ultra-digital lifestyle. Synchronize your mobile ecosystem today.</p>
+                            <div class="flex flex-wrap gap-8">
+                                <button onclick="navigate('products')" class="btn-premium px-12 py-6 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] shadow-2xl shadow-indigo-600/40">Enter Repository</button>
+                                <button class="px-12 py-6 glass rounded-[2rem] font-black text-[10px] uppercase tracking-[0.3em] hover:bg-white/10 transition-all border border-white/10">Philosophy</button>
+                            </div>
+                        </div>
+                        <div class="relative floating-item">
+                            <div class="glass p-10 rounded-[4rem] group overflow-hidden border border-white/10 shadow-[-50px_50px_100px_rgba(0,0,0,0.5)]">
+                                <img src="${mockProducts[4].imageUrl}" class="w-full h-auto rounded-[3rem] transform group-hover:scale-110 transition-transform duration-1000">
+                                <div class="absolute bottom-12 left-12 right-12 p-10 glass rounded-[2rem] translate-y-20 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700">
+                                    <h4 class="text-2xl font-black uppercase tracking-tighter italic">Studio X1 Buds</h4>
+                                    <p class="text-sm text-slate-400 mt-2 font-medium">Biometric frequency isolation enabled.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="py-40 reveal">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+                        ${['cases', 'chargers', 'headphones', 'screenguards'].map(cat => `
+                            <div onclick="filterByCategory('${cat}')" class="group cursor-pointer glass p-10 rounded-[3rem] border border-white/5 hover:bg-white/[0.05] transition-all duration-700">
+                                <div class="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mb-10 group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-${cat === 'cases' ? 'shield-halved' : cat === 'chargers' ? 'bolt-lightning' : cat === 'headphones' ? 'headphones' : 'layer-group'} text-3xl text-indigo-400"></i>
+                                </div>
+                                <h3 class="text-2xl font-black tracking-tighter uppercase italic">${cat}</h3>
+                                <p class="text-[10px] font-black text-slate-600 group-hover:text-white transition-colors mt-2 tracking-widest uppercase">Open Sector</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+
+        function renderProducts() {
+            const filtered = state.selectedCategory === 'all' ? state.products : state.products.filter(p => p.category === state.selectedCategory);
+            return `
+                <div class="flex flex-col space-y-20">
+                    <div class="text-center">
+                        <h2 class="text-7xl font-black tracking-tighter uppercase italic">REPOSITORY <span class="text-slate-700">01</span></h2>
+                        <div class="flex justify-center flex-wrap gap-4 mt-12">
+                            ${['all', 'cases', 'chargers', 'headphones', 'screenguards'].map(c => `
+                                <button onclick="filterByCategory('${c}')" class="px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-white/10 transition-all ${state.selectedCategory === c ? 'bg-indigo-600 text-white shadow-2xl' : 'text-slate-500 hover:bg-white/5'}">${c}</button>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                        ${filtered.map(p => renderCard(p)).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCard(p) {
+            return `
+                <div class="glass p-8 rounded-[3rem] card-hover cursor-pointer flex flex-col h-full border border-white/10" onclick="navigate('product-detail', ${p.id})">
+                    <div class="relative rounded-[2rem] bg-black/40 aspect-square flex items-center justify-center p-8 mb-8 border border-white/5 group overflow-hidden">
+                        <img src="${p.imageUrl}" class="max-w-full max-h-full object-contain group-hover:rotate-12 group-hover:scale-125 transition-transform duration-1000">
+                        <div class="absolute inset-0 bg-indigo-600/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 backdrop-blur-md flex items-center justify-center">
+                            <button onclick="event.stopPropagation(); addToCart(${p.id})" class="px-10 py-5 bg-white text-black rounded-2xl text-[10px] font-black uppercase tracking-widest transform translate-y-10 group-hover:translate-y-0 transition-transform duration-500">Fast Sync</button>
+                        </div>
+                    </div>
+                    <div class="px-4 flex-grow">
+                        <h3 class="text-2xl font-black uppercase tracking-tighter italic mb-4">${p.name}</h3>
+                        <p class="text-slate-500 text-sm font-medium leading-relaxed mb-8 line-clamp-2">${p.description}</p>
+                    </div>
+                    <div class="px-4 pt-8 border-t border-white/5 flex items-center justify-between">
+                        <span class="text-3xl font-black tracking-tighter">₹${p.price.toLocaleString()}</span>
+                        <div class="flex space-x-3">
+                            <button onclick="event.stopPropagation(); addToCart(${p.id})" class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-indigo-600 hover:border-indigo-600 transition-all shadow-xl active:scale-95"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDetail() {
+            const p = state.products.find(x => x.id === state.pageData);
+            if (!p) return renderHome();
+            return `
+                <div class="grid lg:grid-cols-2 gap-24 py-20">
+                    <div class="glass p-20 rounded-[4rem] border border-white/5 flex items-center justify-center shadow-[-50px_50px_100px_rgba(0,0,0,0.8)]">
+                        <img src="${p.imageUrl}" class="w-full h-auto rounded-[3rem] transform hover:scale-110 transition-transform duration-1000">
+                    </div>
+                    <div class="space-y-12">
+                        <div class="space-y-4">
+                            <p class="text-indigo-400 font-black text-xs uppercase tracking-[0.4em]">${p.category}</p>
+                            <h1 class="text-7xl font-black tracking-tighter uppercase italic leading-[0.85]">${p.name}</h1>
+                            <div class="flex items-center space-x-6">
+                                <div class="flex text-amber-500 space-x-1">${Array(5).fill('<i class="fas fa-star text-[10px]"></i>').join('')}</div>
+                                <span class="text-slate-500 text-[10px] font-black uppercase tracking-widest">Active Stock: ${p.stock} Units</span>
+                            </div>
+                        </div>
+                        <p class="text-6xl font-black tracking-tighter italic">₹${p.price.toLocaleString()}</p>
+                        <p class="text-xl text-slate-500 leading-relaxed font-medium">${p.description}</p>
+                        <div class="flex space-x-6">
+                            <button onclick="addToCart(${p.id})" class="flex-1 px-12 py-7 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.4em] shadow-2xl shadow-indigo-600/40 transform hover:scale-[1.02] active:scale-95 transition-all">Synchronize to Bag</button>
+                            <button class="w-24 h-24 glass rounded-[2rem] flex items-center justify-center border border-white/10 hover:text-rose-500 transition-all"><i class="far fa-heart text-2xl"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderLogin() {
+            return `
+                <div class="max-w-md mx-auto py-24">
+                    <div class="glass p-12 rounded-[3.5rem] border border-white/5 shadow-2xl">
+                        <div class="text-center mb-12 space-y-4">
+                            <div class="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-[2rem] flex items-center justify-center mx-auto shadow-2xl"><i class="fas fa-fingerprint text-4xl text-white"></i></div>
+                            <h2 class="text-3xl font-black tracking-tighter uppercase italic">Synchronize Profile</h2>
+                            <p class="text-slate-600 text-[10px] font-black uppercase tracking-widest">Authentication Protocol Required</p>
+                        </div>
+                        <form onsubmit="handleLogin(event)" class="space-y-8">
+                            <div class="space-y-3">
+                                <label class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-700 ml-4">Identifier</label>
+                                <input type="email" id="login-email" required class="w-full bg-white/5 border-none rounded-2xl px-8 py-5 focus:ring-2 focus:ring-indigo-600 outline-none text-sm font-bold text-white transition-all">
+                            </div>
+                            <div class="space-y-3">
+                                <label class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-700 ml-4">Access Key</label>
+                                <input type="password" id="login-password" required class="w-full bg-white/5 border-none rounded-2xl px-8 py-5 focus:ring-2 focus:ring-indigo-600 outline-none text-sm font-bold text-white transition-all">
+                            </div>
+                            <button type="submit" class="w-full py-6 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-[0.4em] shadow-2xl shadow-indigo-600/30">Activate Session</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== ACTIONS ====================
+        function handleLogin(e) { e.preventDefault(); state.currentUser = { id: 1, name: 'CyberAgent', email: 'agent@mg.repository' }; saveToStorage(); renderAuthNav(); navigate('home'); showToast('System Authenticated'); }
+        function logout() { state.currentUser = null; saveToStorage(); renderAuthNav(); navigate('home'); showToast('Session Terminated', 'info'); }
+        function filterByCategory(c) { state.selectedCategory = c; navigate('products'); }
+        function toggleCart() { const s = document.getElementById('cart-sidebar'); const o = document.getElementById('cart-overlay'); s.classList.toggle('translate-x-full'); o.classList.toggle('hidden'); renderCart(); }
+        function addToCart(pId) { const p = state.products.find(x => x.id === pId); const inC = state.cart.find(x => x.id === pId); if (inC) inC.qty++; else state.cart.push({ ...p, qty: 1 }); updateCartCount(); saveToStorage(); showToast('Unit Synchronized'); }
+        function removeFromCart(id) { state.cart = state.cart.filter(p => p.id !== id); updateCartCount(); saveToStorage(); renderCart(); }
+        function updateCartQty(id, d) { const p = state.cart.find(x => x.id === id); if (p) { p.qty += d; if (p.qty <= 0) removeFromCart(id); else { updateCartCount(); saveToStorage(); renderCart(); } } }
+        function updateCartCount() { const c = state.cart.reduce((s, i) => s + i.qty, 0); document.getElementById('cart-count').innerText = c; document.getElementById('item-count-badge').innerText = c === 0 ? 'Vault Empty' : `${c} Units Active`; }
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const footer = document.getElementById('cart-footer');
+            const total = state.cart.reduce((s, i) => s + (i.price * i.qty), 0);
+            if (state.cart.length === 0) {
+                container.innerHTML = `<div class="h-full flex flex-col items-center justify-center text-center"><div class="w-32 h-32 bg-white/5 rounded-[3rem] flex items-center justify-center mb-8 border border-white/5"><i class="fas fa-radar text-4xl text-slate-700 animate-pulse"></i></div><h3 class="text-xl font-black uppercase tracking-widest text-slate-500 italic">No Active Signal</h3></div>`;
+                footer.innerHTML = '';
+            } else {
+                container.innerHTML = state.cart.map(item => `
+                    <div class="flex items-center space-x-6 p-6 glass rounded-[2.5rem] border border-white/5 group bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-500">
+                        <div class="w-24 h-24 rounded-3xl bg-black/40 border border-white/5 flex items-center justify-center p-4 flex-shrink-0 shadow-2xl">
+                            <img src="${item.imageUrl}" class="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform">
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-black text-white uppercase italic tracking-tighter text-lg leading-none mb-2">${item.name}</h4>
+                            <p class="text-sm font-bold text-indigo-400 mb-4">₹${item.price.toLocaleString()}</p>
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center glass rounded-xl p-1 border border-white/10">
+                                    <button onclick="updateCartQty(${item.id}, -1)" class="w-8 h-8 rounded-lg hover:bg-white/10"><i class="fas fa-minus text-[8px]"></i></button>
+                                    <span class="w-8 text-center text-xs font-black">${item.qty}</span>
+                                    <button onclick="updateCartQty(${item.id}, 1)" class="w-8 h-8 rounded-lg hover:bg-white/10"><i class="fas fa-plus text-[8px]"></i></button>
+                                </div>
+                                <button onclick="removeFromCart(${item.id})" class="text-[8px] font-black uppercase tracking-widest text-slate-600 hover:text-red-500">Purge</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                footer.innerHTML = `<div class="space-y-8"><div class="flex justify-between items-center px-4"><span class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Sync Value</span><span class="text-4xl font-black tracking-tighter italic">₹${total.toLocaleString()}</span></div><button onclick="toggleCart(); navigate('checkout')" class="w-full py-6 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-[0.4em] shadow-2xl shadow-indigo-600/40">Initialize Transaction</button></div>`;
+            }
+        }
+        function renderCheckout() {
+            const total = state.cart.reduce((s, i) => s + (i.price * i.qty), 0);
+            return `
+                <div class="grid lg:grid-cols-2 gap-20 py-20">
+                    <div class="space-y-12">
+                        <h2 class="text-6xl font-black tracking-tighter uppercase italic">Secure <span class="text-indigo-400">Sync</span></h2>
+                        <form onsubmit="handleCheckout(event)" class="space-y-10">
+                            <div class="glass p-10 rounded-[3rem] border border-white/5 space-y-8">
+                                <div class="flex items-center space-x-4 mb-4"><span class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center font-black">01</span><h3 class="text-xl font-black uppercase italic tracking-widest">Digital Address</h3></div>
+                                <div class="space-y-6">
+                                    <input type="text" placeholder="Sector / Street Address" required class="w-full bg-white/5 border-none rounded-2xl px-8 py-5 focus:ring-2 focus:ring-indigo-600 outline-none font-bold">
+                                    <div class="grid grid-cols-2 gap-6">
+                                        <input type="text" placeholder="Nexus City" required class="w-full bg-white/5 border-none rounded-2xl px-8 py-5 focus:ring-2 focus:ring-indigo-600 outline-none font-bold">
+                                        <input type="text" placeholder="Grid Code" required class="w-full bg-white/5 border-none rounded-2xl px-8 py-5 focus:ring-2 focus:ring-indigo-600 outline-none font-bold">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full py-8 bg-indigo-600 hover:bg-indigo-500 text-white rounded-[2.5rem] font-black text-xs uppercase tracking-[0.5em] shadow-2xl shadow-indigo-600/40 transform hover:scale-[1.01] active:scale-95 transition-all">Confirm Synchronisation</button>
+                        </form>
+                    </div>
+                    <div class="lg:sticky lg:top-40 h-fit">
+                        <div class="glass p-10 rounded-[3rem] border border-white/5 shadow-2xl space-y-10 bg-black/20">
+                            <h3 class="text-2xl font-black uppercase italic tracking-tighter">Vault Summary</h3>
+                            <div class="space-y-6">
+                                ${state.cart.map(i => `<div class="flex justify-between items-center"><span class="text-slate-500 font-bold italic">${i.name} [x${i.qty}]</span><span class="font-black">₹${(i.price * i.qty).toLocaleString()}</span></div>`).join('')}
+                            </div>
+                            <div class="h-px bg-white/5"></div>
+                            <div class="flex justify-between items-center text-4xl font-black tracking-tighter italic"><span>Total</span><span class="text-indigo-400">₹${total.toLocaleString()}</span></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        function handleCheckout(e) { e.preventDefault(); state.orders.push({ id: Date.now(), total: state.cart.reduce((s, i) => s + (i.price * i.qty), 0), date: new Date(), items: [...state.cart] }); state.cart = []; saveToStorage(); updateCartCount(); navigate('orders'); showToast('Gear Synchronized Successfully'); }
+        function renderOrders() {
+            return `
+                <div class="max-w-4xl mx-auto py-20">
+                    <h2 class="text-6xl font-black tracking-tighter uppercase italic mb-16">Vault <span class="text-indigo-400">Activity</span></h2>
+                    <div class="space-y-8">
+                        ${state.orders.length === 0 ? `<div class="glass p-20 rounded-[4rem] text-center"><p class="text-slate-500 font-black uppercase tracking-widest italic">No active signatures in memory</p></div>` :
+                    state.orders.map(o => `
+                            <div class="glass p-10 rounded-[3rem] border border-white/5 flex flex-wrap items-center justify-between hover:border-indigo-500/50 transition-all duration-700">
+                                <div class="flex items-center space-x-10">
+                                    <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center font-black text-indigo-400">#${o.id.toString().slice(-4)}</div>
+                                    <div><p class="text-[8px] font-black uppercase tracking-widest text-slate-700 mb-1">Time Signature</p><p class="font-black text-white italic">${new Date(o.date).toLocaleDateString()}</p></div>
+                                    <div><p class="text-[8px] font-black uppercase tracking-widest text-slate-700 mb-1">Units Transferred</p><p class="font-black text-white italic">${o.items.length}</p></div>
+                                </div>
+                                <div class="text-right"><p class="text-[8px] font-black uppercase tracking-widest text-slate-700 mb-1">Total Value</p><p class="text-4xl font-black tracking-tighter italic">₹${o.total.toLocaleString()}</p></div>
+                            </div>
+                        `).reverse().join('')}
+                    </div>
+                </div>
+            `;
+        }
+        init();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,295 @@
+<nav class="sticky top-0 z-50 transition-all duration-700 glass border-b border-glass-border">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-28">
+      <!-- Logo Section -->
+      <div class="flex items-center space-x-5 cursor-pointer group" routerLink="/">
+        <!-- Interactive App Logo Image -->
+        <div class="relative w-16 h-16 [perspective:1000px] z-10">
+          <!-- Ambient Glow -->
+          <div
+            class="absolute inset-0 bg-red-600/40 blur-2xl rounded-full scale-[1.5] opacity-0 group-hover:opacity-100 animate-pulse transition-all duration-700">
+          </div>
+
+          <!-- Rotating Data Rings -->
+          <div
+            class="absolute inset-0 rounded-full border border-red-500/20 scale-110 opacity-0 group-hover:opacity-100 group-hover:rotate-180 transition-all duration-1000">
+          </div>
+          <div
+            class="absolute inset-0 rounded-full border-t-2 border-r-2 border-red-500 scale-[1.3] opacity-0 group-hover:opacity-100 group-hover:-rotate-180 transition-all duration-1000 delay-75">
+          </div>
+
+          <!-- Main Logo Body: 3D Flip & Scale -->
+          <div
+            class="relative w-full h-full rounded-[1.2rem] shadow-2xl shadow-red-600/30 overflow-hidden bg-gradient-to-br from-red-600 via-red-800 to-black transition-all duration-700 ease-out transform group-hover:scale-110 group-hover:rotate-12 [transform-style:preserve-3d]">
+
+            <!-- Abstract background image inside logo -->
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=200"
+              class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay group-hover:scale-150 transition-transform duration-1000"
+              alt="App Geometry">
+
+            <!-- Default Icon -->
+            <div
+              class="absolute inset-0 flex items-center justify-center transition-all duration-500 group-hover:opacity-0 group-hover:-translate-y-full">
+              <i class="fas fa-layer-group text-2xl text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]"></i>
+            </div>
+
+            <!-- Hover Icon (Interactive State) -->
+            <div
+              class="absolute inset-0 flex items-center justify-center translate-y-full opacity-0 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
+              <i class="fas fa-bolt text-3xl text-white drop-shadow-[0_0_15px_rgba(255,255,255,1)] animate-pulse"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col">
+          <span
+            class="text-3xl font-black tracking-tighter text-main leading-none italic uppercase transition-all duration-500 group-hover:text-red-600">MOBILE<span
+              class="text-red-500 group-hover:text-main transition-all duration-500">GEAR</span></span>
+          <span
+            class="text-[9px] font-black tracking-[0.4em] text-muted uppercase mt-1 group-hover:text-red-400 transition-colors duration-500"> :
+            v3.00</span>
+        </div>
+      </div>
+
+      <!-- Main Nav Items -->
+      <div class="hidden md:flex items-center space-x-12 lg:ml-24 md:ml-12">
+        <a routerLink="/" routerLinkActive="text-red-600 border-b-2 border-red-600"
+          [routerLinkActiveOptions]="{exact: true}"
+          class="text-[11px] font-black uppercase tracking-[0.4em] text-muted hover:text-main transition-all py-2">{{
+          'NAV_HOME' | translate }}</a>
+        <a routerLink="/products" routerLinkActive="text-red-600 border-b-2 border-red-600"
+          class="text-[11px] font-black uppercase tracking-[0.4em] text-muted hover:text-main transition-all py-2">{{
+          'NAV_CATALOG' | translate }}</a>
+        <a routerLink="/compare" routerLinkActive="text-red-600 border-b-2 border-red-600"
+          class="text-[11px] font-black uppercase tracking-[0.4em] text-muted hover:text-main transition-all py-2">{{
+          'NAV_COMPARE' | translate }}</a>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="hidden md:flex items-center mx-6 w-full max-w-[80rem]">
+        <div class="relative w-full group">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <i-lucide name="search" class="w-5 h-5 text-muted group-hover:text-red-600 transition-colors"></i-lucide>
+          </div>
+          <input type="text" [(ngModel)]="searchTerm" (keyup.enter)="onSearch()" (input)="onSearchInput()"
+            [placeholder]="'NAV_SEARCH' | translate"
+            class="w-full bg-black/10 dark:bg-white/5 border border-glass-border rounded-[1.25rem] py-4 pl-12 pr-12 text-lg font-bold text-main placeholder-muted focus:outline-none focus:border-red-600/50 focus:ring-2 focus:ring-red-600/20 transition-all shadow-inner">
+
+          <button (click)="startVoiceSearch()"
+            class="absolute inset-y-0 right-0 pr-4 flex items-center transition-colors group/mic">
+            <i class="fas fa-microphone text-lg" [class.text-red-500]="isListening" [class.animate-pulse]="isListening"
+              [class.text-muted]="!isListening" [class.group-hover/mic:text-main]="!isListening"></i>
+          </button>
+
+          @if (suggestions.length > 0) {
+          <div
+            class="absolute top-full left-0 w-full mt-3 bg-bg-secondary border border-glass-border rounded-[2rem] shadow-2xl overflow-hidden z-50 animate-reveal-up p-2 backdrop-blur-xl">
+            @for (item of suggestions; track item.id) {
+            <div (click)="selectSuggestion(item)"
+              class="flex items-center p-4 hover:bg-white/10 dark:hover:bg-white/5 cursor-pointer rounded-2xl transition-all group mb-1 last:mb-0">
+              <div class="w-14 h-14 rounded-xl bg-white/10 p-2 border border-glass-border mr-4">
+                <img [src]="item.imageUrl" class="w-full h-full object-contain">
+              </div>
+              <div class="flex-grow min-w-0">
+                <p class="text-sm font-black text-main group-hover:text-red-600 transition-colors truncate">
+                  {{ item.name }}</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-bold text-red-500 uppercase tracking-widest">{{ item.category }}</span>
+                  <span class="text-[10px] text-muted">•</span>
+                  <span class="text-[10px] font-bold text-main">₹{{ item.price.toLocaleString() }}</span>
+                </div>
+              </div>
+              <i-lucide name="arrow-right"
+                class="w-4 h-4 text-muted opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0"></i-lucide>
+            </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Right Actions -->
+      <div class="flex items-center space-x-8">
+        <!-- Language Switcher -->
+        <div class="relative group z-40">
+          <button
+            class="w-10 h-10 rounded-xl bg-bg-secondary border border-glass-border flex items-center justify-center text-[10px] font-black uppercase text-main hover:border-red-600 transition-all">
+            {{ languageService.currentLang() }}
+          </button>
+          <div
+            class="absolute top-12 right-0 bg-bg-secondary border border-glass-border rounded-xl p-2 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all flex flex-col gap-1 min-w-[3rem]">
+            @for (lang of languages; track lang.code) {
+            <button (click)="setLang(lang.code)"
+              class="px-2 py-2 text-[10px] font-bold uppercase hover:bg-black/10 dark:hover:bg-white/10 rounded-lg text-center"
+              [class.text-red-500]="languageService.currentLang() === lang.code">
+              {{ lang.label }}
+            </button>
+            }
+          </div>
+        </div>
+
+        <!-- Notifications Bell -->
+        <div class="relative">
+          <button (click)="toggleNotifications()"
+            class="relative w-14 h-14 bg-bg-secondary rounded-2xl border border-glass-border flex items-center justify-center transition-all hover:scale-110 active:scale-95 group shadow-xl z-20">
+            <i class="fas fa-bell text-xl text-muted group-hover:text-red-500 transition-colors"></i>
+            @if (notificationService.unreadCount() > 0) {
+            <span
+              class="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-black rounded-lg w-6 h-6 flex items-center justify-center shadow-xl shadow-red-600/30 border-2 border-bg-main animate-pulse">
+              {{ notificationService.unreadCount() }}
+            </span>
+            }
+          </button>
+
+          <!-- Notification Dropdown -->
+          @if (showNotifications) {
+          <div
+            class="absolute right-0 top-16 w-80 sm:w-96 glass rounded-[2.5rem] shadow-2xl overflow-hidden border border-glass-border animate-reveal origin-top-right z-30">
+            <div class="px-8 py-6 border-b border-glass-border flex justify-between items-center bg-white/5">
+              <h3 class="text-[10px] font-black text-muted uppercase tracking-[0.4em]">Signal Logs</h3>
+              @if (notificationService.unreadCount() > 0) {
+              <button (click)="notificationService.markAllAsRead()"
+                class="text-[9px] font-bold text-red-500 hover:text-red-400 uppercase tracking-wider">
+                Clear Signals
+              </button>
+              }
+            </div>
+
+            <div class="max-h-[60vh] overflow-y-auto">
+              @for (note of notificationService.notifications(); track note.id) {
+              <div (click)="notificationService.markAsRead(note.id)"
+                class="px-8 py-5 border-b border-glass-border hover:bg-white/5 cursor-pointer transition-colors group flex gap-4 relative">
+                <!-- Unread Dot -->
+                @if (!note.read) {
+                <span
+                  class="absolute left-3 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-red-500 shadow-xl shadow-red-500"></span>
+                }
+
+                <!-- Icon -->
+                <div class="mt-1">
+                  @if (note.type === 'alert') { <i
+                    class="fas fa-arrow-down text-red-500 bg-red-500/10 p-2 rounded-lg text-xs"></i> }
+                  @else if (note.type === 'success') { <i
+                    class="fas fa-check text-emerald-500 bg-emerald-500/10 p-2 rounded-lg text-xs"></i> }
+                  @else { <i class="fas fa-info text-blue-500 bg-blue-500/10 p-2 rounded-lg text-xs"></i> }
+                </div>
+
+                <div>
+                  <p class="text-xs font-black text-main uppercase tracking-wider mb-1" [class.text-muted]="note.read">
+                    {{ note.title }}</p>
+                  <p class="text-[11px] font-medium text-muted leading-relaxed">{{ note.message }}</p>
+                  <p class="text-[9px] font-black text-slate-400 mt-2">{{ note.timestamp | date:'shortTime' }}</p>
+                </div>
+              </div>
+              } @empty {
+              <div class="px-8 py-12 text-center text-muted">
+                <i class="fas fa-satellite-dish text-2xl mb-4 opacity-30"></i>
+                <p class="text-[10px] uppercase font-black tracking-[0.3em]">No Active Signals</p>
+              </div>
+              }
+            </div>
+          </div>
+
+          <!-- Backdrop to close -->
+          <div class="fixed inset-0 z-10" (click)="toggleNotifications()"></div>
+          }
+        </div>
+
+        <!-- Theme Toggle -->
+        <button (click)="themeService.toggleTheme()"
+          class="w-14 h-14 bg-bg-secondary rounded-2xl border border-glass-border flex items-center justify-center transition-all hover:scale-110 active:scale-95 group shadow-xl">
+          @if (themeService.isDarkMode()) {
+          <i class="fas fa-sun text-xl text-amber-500 animate-reveal"></i>
+          } @else {
+          <i class="fas fa-moon text-xl text-red-600 animate-reveal"></i>
+          }
+        </button>
+
+        <!-- Compare Icon -->
+        <button routerLink="/compare"
+          class="relative w-14 h-14 bg-bg-secondary rounded-2xl border border-glass-border flex items-center justify-center transition-all hover:scale-110 active:scale-95 group shadow-xl">
+          <i class="fas fa-exchange-alt text-xl text-muted group-hover:text-red-500 transition-colors"></i>
+          @if (compareService.items().length > 0) {
+          <span
+            class="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-black rounded-lg w-6 h-6 flex items-center justify-center shadow-xl shadow-red-600/30 border-2 border-bg-main animate-reveal">
+            {{ compareService.items().length }}
+          </span>
+          }
+        </button>
+
+        <!-- Wishlist Icon -->
+        <button routerLink="/wishlist"
+          class="relative w-14 h-14 bg-bg-secondary rounded-2xl border border-glass-border flex items-center justify-center transition-all hover:scale-110 active:scale-95 group shadow-xl">
+          <i class="fas fa-heart text-xl text-muted group-hover:text-red-500 transition-colors"></i>
+          @if (wishlistService.totalItems() > 0) {
+          <span
+            class="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-black rounded-lg w-6 h-6 flex items-center justify-center shadow-xl shadow-red-600/30 border-2 border-bg-main animate-reveal">
+            {{ wishlistService.totalItems() }}
+          </span>
+          }
+        </button>
+
+        <!-- Shopping Cart Icon -->
+        <button routerLink="/cart"
+          class="relative w-14 h-14 bg-bg-secondary rounded-2xl border border-glass-border flex items-center justify-center transition-all hover:scale-110 active:scale-95 group shadow-xl">
+          <i class="fas fa-shopping-bag text-xl text-muted group-hover:text-main transition-colors"></i>
+          @if (cartService.totalItems() > 0) {
+          <span
+            class="absolute -top-2 -right-2 bg-red-600 text-white text-[10px] font-black rounded-lg w-6 h-6 flex items-center justify-center shadow-xl shadow-red-600/30 border-2 border-bg-main animate-reveal">
+            {{ cartService.totalItems() }}
+          </span>
+          }
+        </button>
+
+        <!-- Authentication -->
+        @if (authService.user$ | async; as user) {
+        <div class="relative group">
+          <button
+            class="flex items-center space-x-4 p-2 bg-bg-secondary border border-glass-border rounded-2xl hover:bg-white/10 dark:hover:bg-white/5 transition-all shadow-xl">
+            <div
+              class="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center text-white font-black shadow-lg">
+              {{ (user.displayName || user.email || 'U').charAt(0).toUpperCase() }}
+            </div>
+            <span class="hidden md:block font-black text-[10px] uppercase tracking-widest pr-2 text-main">
+              {{ user.displayName || user.email?.split('@')?.[0] }}
+            </span>
+            <i class="fas fa-chevron-down text-[8px] text-muted pr-2"></i>
+          </button>
+
+          <!-- Dropdown -->
+          <div
+            class="absolute right-0 mt-4 w-72 glass rounded-[2.5rem] shadow-2xl py-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 transform translate-y-4 group-hover:translate-y-0 border-glass-border shadow-red-500/10">
+            <div class="px-8 py-5 border-b border-glass-border mb-3">
+              <p class="text-[9px] font-black text-muted uppercase tracking-[0.4em] mb-1">{{ 'NAV_ACC' |
+                translate }}</p>
+              <p class="text-sm font-black text-main truncate italic">MG-{{ user.uid.slice(0, 12) }}</p>
+            </div>
+            <a routerLink="/nexus-card"
+              class="flex items-center px-8 py-4 hover:bg-black/5 dark:hover:bg-white/5 transition-all group">
+              <i class="fas fa-credit-card mr-5 text-muted group-hover:text-red-500 transition-colors"></i>
+              <span class="text-[10px] font-black uppercase tracking-[0.3em] text-main">Nexus Card</span>
+            </a>
+            <a routerLink="/orders"
+              class="flex items-center px-8 py-4 hover:bg-black/5 dark:hover:bg-white/5 transition-all group">
+              <i class="fas fa-box-open mr-5 text-muted group-hover:text-red-500 transition-colors"></i>
+              <span class="text-[10px] font-black uppercase tracking-[0.3em] text-main">{{ 'NAV_ORDERS' | translate
+                }}</span>
+            </a>
+            <hr class="my-3 border-glass-border mx-6">
+            <button (click)="authService.logout()"
+              class="w-full flex items-center px-8 py-4 text-red-500 hover:bg-red-500/10 transition-all group">
+              <i class="fas fa-sign-out-alt mr-5"></i>
+              <span class="text-[10px] font-black uppercase tracking-[0.4em]">{{ 'NAV_LOGOUT' | translate }}</span>
+            </button>
+          </div>
+        </div>
+        } @else {
+        <button routerLink="/login"
+          class="px-10 py-4 bg-main border border-glass-border text-main rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] shadow-xl hover:bg-red-600 hover:text-white hover:border-red-600 transition-all active:scale-95">
+          {{ 'NAV_LOGIN' | translate }}
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+</nav>

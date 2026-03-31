@@ -1,0 +1,194 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 min-h-screen">
+    <div class="flex items-center space-x-6 mb-16">
+        <h1 class="text-5xl font-black text-slate-900 tracking-tight">Your Digital Bag</h1>
+        <span
+            class="px-6 py-2 bg-red-50 text-red-600 rounded-full font-black text-xs uppercase tracking-widest border border-red-100">
+            {{ cartService.totalItems() }} items
+        </span>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-16">
+        <!-- Items List -->
+        <div class="lg:col-span-2 space-y-8">
+            @if (cartService.items().length > 0) {
+            @for (item of cartService.items(); track item.id) {
+            <div
+                class="bg-white rounded-[2.5rem] p-8 border border-slate-100 flex flex-col md:flex-row items-center gap-8 group hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-700">
+                <!-- Product Image -->
+                <div
+                    class="w-40 h-40 rounded-3xl bg-slate-50 overflow-hidden flex-shrink-0 border border-slate-50 flex items-center justify-center p-4">
+                    <img [src]="item.product.imageUrl" onerror="this.onerror=null; this.src='/assets/images/default.jpg'"
+                        class="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500">
+                </div>
+
+                <!-- Details -->
+                <div class="flex-grow">
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2 block">{{
+                        item.product.category }}</span>
+                    <h3 class="text-2xl font-black text-slate-900 leading-none mb-3">{{ item.product.name }}</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-4 line-clamp-2">{{ item.product.description }}
+                    </p>
+                    <p class="text-2xl font-black text-red-600">{{ item.product.price | currency }}</p>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex flex-col items-center gap-4">
+                    <div class="flex items-center bg-slate-50 rounded-2xl p-2 border border-slate-100 shadow-inner">
+                        <button (click)="decreaseQuantity(item.product.id, item.quantity)"
+                            class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white hover:shadow-sm transition-all text-slate-400 hover:text-red-600">
+                            <i class="fas fa-minus text-[10px]"></i>
+                        </button>
+                        <span class="w-10 text-center font-black text-slate-800 text-lg">{{ item.quantity }}</span>
+                        <button (click)="increaseQuantity(item.product.id, item.quantity)"
+                            class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white hover:shadow-sm transition-all text-slate-400 hover:text-red-600">
+                            <i class="fas fa-plus text-[10px]"></i>
+                        </button>
+                    </div>
+
+                    <button (click)="removeItem(item.product.id)"
+                        class="px-4 py-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all text-[10px] font-black uppercase tracking-widest flex items-center">
+                        <i class="far fa-trash-alt mr-2"></i> Remove
+                    </button>
+                </div>
+            </div>
+            }
+            } @else {
+            <div
+                class="text-center py-32 bg-white rounded-[4rem] border-2 border-dashed border-slate-100 animate-in fade-in zoom-in duration-700">
+                <div
+                    class="w-32 h-32 bg-slate-50 rounded-[3rem] flex items-center justify-center mx-auto mb-8 shadow-inner shadow-slate-200/50">
+                    <i class="fas fa-shopping-bag text-5xl text-slate-200"></i>
+                </div>
+                <h2 class="text-3xl font-black text-slate-900">Your bag is empty</h2>
+                <p class="text-slate-500 mt-4 mb-10 max-w-xs mx-auto">Looks like you haven't added any premium gear to
+                    your bag yet.</p>
+                <button routerLink="/products"
+                    class="px-10 py-5 gradient-bg text-white rounded-[2rem] font-black shadow-2xl shadow-red-500/20 active:scale-95 hover:scale-[1.02] transition-transform">
+                    EXPLORE COLLECTION
+                </button>
+            </div>
+            }
+        </div>
+
+        <!-- Summary -->
+        <div class="lg:col-span-1">
+            <div
+                class="bg-slate-900 text-white rounded-[3rem] p-10 sticky top-32 shadow-2xl shadow-red-950/40 animate-in fade-in slide-in-from-right duration-700">
+                <h2 class="text-2xl font-black mb-10 border-b border-white/10 pb-6">Bag Summary</h2>
+
+                <div class="space-y-6 mb-10">
+                    <div class="flex justify-between text-slate-400 font-bold uppercase tracking-widest text-[10px]">
+                        <span>Subtotal</span>
+                        <span class="text-white text-lg">{{ cartService.subTotal() | currency }}</span>
+                    </div>
+                    <div class="flex justify-between text-slate-400 font-bold uppercase tracking-widest text-[10px]">
+                        <span>VAT / Tax (5%)</span>
+                        <span class="text-white text-lg">{{ cartService.tax() | currency }}</span>
+                    </div>
+                    @if (cartService.discount() > 0) {
+                    <div class="flex justify-between text-emerald-400 font-bold uppercase tracking-widest text-[10px]">
+                        <span>Special Offer Discount</span>
+                        <span class="text-emerald-400 text-lg">-{{ cartService.discount() | currency }}</span>
+                    </div>
+                    }
+                    @if (exchangeService.isExchangeActive()) {
+                    <div class="flex justify-between text-emerald-400 font-bold uppercase tracking-widest text-[10px]">
+                        <span>Exchange Credit: {{ exchangeService.selectedDevice()?.model }}</span>
+                        <span class="text-emerald-400 text-lg">-{{ exchangeService.selectedDevice()?.baseValue |
+                            currency }}</span>
+                    </div>
+                    }
+                    <div class="flex justify-between text-slate-400 font-bold uppercase tracking-widest text-[10px]">
+                        <span>Estimated Shipping</span>
+                        <span class="text-emerald-400 text-xs">FREE EXPRESS</span>
+                    </div>
+
+                    <div class="pt-8 border-t border-white/10 flex justify-between items-center">
+                        <span class="text-xl font-bold">Total</span>
+                        <span class="text-4xl font-black text-red-500 tracking-tighter">{{ cartService.totalPrice() |
+                            currency }}</span>
+                    </div>
+
+                    <!-- Coupon Input -->
+                    <div class="pt-6 space-y-4">
+                        @if (!cartService.appliedCoupon()) {
+                        <div class="flex gap-2">
+                            <input [(ngModel)]="couponCode" type="text" placeholder="Promo Code"
+                                class="w-full bg-white/10 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-500 font-bold uppercase tracking-wider text-xs focus:ring-1 focus:ring-red-500 focus:border-red-500">
+                            <button (click)="applyCoupon()"
+                                class="bg-white text-slate-900 px-6 rounded-xl font-black text-[10px] uppercase tracking-wider hover:bg-slate-200 transition-colors">
+                                Apply
+                            </button>
+                        </div>
+                        @if (cartService.couponError()) {
+                        <p class="text-red-400 text-[10px] font-bold mt-2 animate-pulse">{{ cartService.couponError() }}
+                        </p>
+                        }
+
+                        <!-- Suggestion: Available Coupons -->
+                        <div class="mt-4 p-4 rounded-2xl bg-white/5 border border-white/5 space-y-3">
+                            <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Available </p>
+                            @for (coupon of cartService.availableCoupons; track coupon.code) {
+                            <div (click)="!cartService.isCouponUsed(coupon.code) && (couponCode = coupon.code)"
+                                [class.opacity-50]="cartService.isCouponUsed(coupon.code)"
+                                [class.cursor-not-allowed]="cartService.isCouponUsed(coupon.code)"
+                                class="flex justify-between items-center cursor-pointer group">
+                                <div class="flex flex-col">
+                                    <span [class.line-through]="cartService.isCouponUsed(coupon.code)"
+                                        class="text-[10px] font-black group-hover:text-red-400 transition-colors">{{
+                                        coupon.code }}</span>
+                                    <span class="text-[8px] text-slate-500 font-bold">{{ coupon.description }}</span>
+                                </div>
+                                @if (cartService.isCouponUsed(coupon.code)) {
+                                <span class="text-[8px] font-black text-red-500 uppercase">Used</span>
+                                } @else if (cartService.subTotal() >= coupon.minOrder) {
+                                <i class="fas fa-plus text-[8px] text-slate-600 group-hover:text-red-400"></i>
+                                } @else {
+                                <span class="text-[8px] text-slate-700 font-bold">â‚¹{{ coupon.minOrder.toLocaleString()
+                                    }}+</span>
+                                }
+                            </div>
+                            }
+                        </div>
+                        } @else {
+                        <div
+                            class="flex items-center justify-between bg-emerald-500/20 border border-emerald-500/30 p-4 rounded-xl">
+                            <div class="flex flex-col">
+                                <span class="text-emerald-400 font-black text-xs uppercase tracking-widest">{{
+                                    cartService.appliedCoupon()?.code }}</span>
+                                <span class="text-emerald-500/70 text-[10px] font-bold">{{
+                                    cartService.appliedCoupon()?.description }}</span>
+                            </div>
+                            <button (click)="removeCoupon()"
+                                class="text-emerald-400 hover:text-white transition-colors">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <button routerLink="/checkout" [disabled]="cartService.items().length === 0"
+                    class="w-full py-6 gradient-bg text-white rounded-[2rem] font-black text-xl hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl shadow-red-500/30 flex items-center justify-center space-x-4">
+                    <span>SECURE CHECKOUT</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+
+                <div class="mt-12 grid grid-cols-2 gap-4">
+                    <div
+                        class="flex flex-col items-center p-4 bg-white/5 rounded-2xl text-center border border-white/5">
+                        <i class="fas fa-shield-check text-red-400 mb-2 text-xl"></i>
+                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Secured
+                            Payment</span>
+                    </div>
+                    <div
+                        class="flex flex-col items-center p-4 bg-white/5 rounded-2xl text-center border border-white/5">
+                        <i class="fas fa-truck-fast text-red-400 mb-2 text-xl"></i>
+                        <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">Express
+                            Delivery</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

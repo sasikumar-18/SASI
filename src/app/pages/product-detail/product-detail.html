@@ -1,0 +1,319 @@
+<div class="min-h-screen bg-slate-50 py-8 lg:py-12 selection:bg-red-500/30 selection:text-red-900 font-sans text-slate-800">
+
+    @if (product$ | async; as product) {
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-fade-in-up">
+        
+        <!-- Breadcrumbs -->
+        <nav class="flex items-center gap-3 text-xs font-semibold text-slate-500 mb-8 overflow-x-auto scrollbar-hide py-2">
+            <a routerLink="/" class="hover:text-red-600 transition-colors cursor-pointer flex items-center gap-1.5 whitespace-nowrap"><i class="fas fa-home"></i> Home</a>
+            <i class="fas fa-chevron-right text-[10px] opacity-50 shrink-0"></i>
+            <span class="hover:text-red-600 transition-colors cursor-pointer whitespace-nowrap">Mobiles & Flagships</span>
+            <i class="fas fa-chevron-right text-[10px] opacity-50 shrink-0"></i>
+            <span class="text-red-600 truncate max-w-[200px] shrink-0 font-bold">{{ product.name }}</span>
+        </nav>
+
+        <div class="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+            
+            <!-- ====== LEFT: GALLERY SYSTEM ====== -->
+            <div class="lg:col-span-5 lg:sticky lg:top-8 order-1">
+                
+                <div class="flex flex-col gap-6">
+                    <!-- Main Image Stage -->
+                    <div class="w-full aspect-square bg-white rounded-[2rem] p-8 sm:p-12 border border-slate-200 shadow-xl shadow-slate-200/40 relative group overflow-hidden flex items-center justify-center">
+                        <img [src]="activeImage || product.imageUrl" onerror="this.onerror=null; this.src='/assets/images/default.jpg'" referrerpolicy="no-referrer"
+                            class="max-w-[90%] max-h-[90%] object-contain transition-transform duration-700 ease-out group-hover:scale-110 z-10">
+                        
+                        <!-- Badges -->
+                        <div class="absolute top-6 left-6 z-20">
+                            <span class="bg-red-600 text-white text-[10px] font-black px-4 py-2 rounded-xl uppercase tracking-widest shadow-lg shadow-red-600/30 flex items-center gap-2 transform transition-transform hover:scale-105">
+                                <i class="fas fa-gem text-indigo-300 animate-pulse"></i> Premium
+                            </span>
+                        </div>
+                        
+                        <!-- Floating Actions -->
+                        <div class="absolute top-6 right-6 z-20 flex flex-col gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">
+                            <button class="w-12 h-12 rounded-full bg-white border border-slate-100 shadow-lg text-slate-400 hover:text-rose-500 hover:border-rose-100 transition-all hover:scale-110 active:scale-95 flex items-center justify-center">
+                                <i class="fas fa-heart text-xl"></i>
+                            </button>
+                            <button (click)="toggleCompare(product)" class="w-12 h-12 rounded-full bg-white border border-slate-100 shadow-lg text-slate-400 hover:text-red-600 hover:border-indigo-100 transition-all hover:scale-110 active:scale-95 flex items-center justify-center">
+                                <i class="fas fa-exchange-alt text-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Thumbnails -->
+                    @if (product.images && product.images.length > 0) {
+                    <div class="flex gap-4 w-full overflow-x-auto pb-4 scrollbar-hide shrink-0">
+                        @for (img of product.images; track img) {
+                        <button (click)="setActiveImage(img)" 
+                            class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white p-3 border-2 shadow-sm transition-all duration-300 hover:-translate-y-1 relative"
+                            [class.border-red-600]="(activeImage || product.imageUrl) === img"
+                            [class.border-slate-200]="(activeImage || product.imageUrl) !== img">
+                            <img [src]="img" onerror="this.onerror=null; this.src='/assets/images/default.jpg'" referrerpolicy="no-referrer" class="w-full h-full object-contain mix-blend-multiply">
+                        </button>
+                        }
+                    </div>
+                    }
+                </div>
+
+                <!-- Desktop Action Buttons -->
+                <div class="hidden lg:grid grid-cols-2 gap-4 mt-6">
+                    <button (click)="addToCart(product)" [disabled]="product.stock <= 0" 
+                        class="h-16 lg:h-20 bg-white border-2 border-slate-300 text-slate-700 rounded-2xl font-bold text-lg uppercase tracking-wide hover:border-red-600 hover:text-red-600 hover:shadow-lg hover:-translate-y-1 active:scale-95 transition-all flex items-center justify-center gap-3">
+                        <i class="fas fa-shopping-bag text-2xl"></i> Add To Bag
+                    </button>
+                    <button (click)="buyNow(product)" [disabled]="product.stock <= 0" 
+                        class="h-16 lg:h-20 bg-red-600 text-white rounded-2xl font-bold text-lg uppercase tracking-wide shadow-xl shadow-red-600/30 hover:bg-red-700 hover:-translate-y-1 active:scale-95 transition-all flex items-center justify-center gap-3">
+                        <i class="fas fa-bolt text-yellow-300 animate-bounce"></i> Buy Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- ====== RIGHT: PRODUCT DETAILS ====== -->
+            <div class="lg:col-span-7 space-y-10 order-2">
+                
+                <!-- Title & Rating -->
+                <div class="space-y-4 border-b border-slate-200 pb-8">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 leading-[1.1] tracking-tight">
+                        {{ product.name }}
+                    </h1>
+                    
+                    <div class="flex flex-wrap items-center gap-4 text-sm font-semibold">
+                        <div class="bg-red-600 text-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-md shadow-red-600/20">
+                            {{ product.rating | number:'1.1-1' }} <i class="fas fa-star text-[10px] text-yellow-300"></i>
+                        </div>
+                        <span class="text-slate-500 hover:text-red-600 transition-colors cursor-pointer underline underline-offset-4 decoration-slate-300">{{ product.reviewsCount || 0 }} Verified Ratings</span>
+                        <div class="w-1.5 h-1.5 rounded-full bg-slate-300"></div>
+                        <span class="text-emerald-600 flex items-center gap-1.5 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200">
+                            <i class="fas fa-shield-check"></i> Nexus Assured
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Price Block -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl shadow-slate-200/30 hover:shadow-2xl hover:border-indigo-200 transition-all duration-300">
+                    <div class="inline-flex items-center gap-2 text-rose-600 font-bold text-xs uppercase tracking-wider bg-rose-50 px-3 py-1.5 rounded-lg border border-rose-200 mb-4 animate-pulse">
+                        <i class="fas fa-tags"></i> Extreme Savings: ₹{{ (product.originalPrice || (product.price * 1.2)) - product.price | number:'1.0-0' }} OFF
+                    </div>
+                    
+                    <div class="flex flex-wrap items-baseline gap-4 mb-2">
+                        <span class="text-5xl md:text-6xl font-black text-slate-900 tracking-tighter">{{ product.price | currency:'INR':'symbol':'1.0-0' }}</span>
+                        <span class="text-xl md:text-2xl text-slate-400 font-bold line-through decoration-slate-300">{{ product.originalPrice || (product.price * 1.2) | currency:'INR':'symbol':'1.0-0' }}</span>
+                        <span class="text-emerald-600 font-black text-lg">{{ product.discount || 14 }}% OFF</span>
+                    </div>
+
+                    <p class="text-slate-500 text-sm font-medium mt-4">{{ product.description }}</p>
+                </div>
+
+                <!-- Offers (Interactive Cards) -->
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-orange-200 transition-all duration-300 group cursor-default">
+                        <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-900 mb-2">Instant Bank Cashback</h4>
+                        <p class="text-sm text-slate-500 leading-relaxed">5% Unlimited Cashback on Nexus Axis Credit Card. Apply instantly at checkout.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-purple-200 transition-all duration-300 group cursor-default">
+                        <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-900 mb-2">Zero Cost EMI Option</h4>
+                        <p class="text-sm text-slate-500 leading-relaxed">EMI starting from just <span class="text-slate-900 font-bold">₹{{ nexusCardService.calculateEMI(product.price, 12) }}/mo</span> via major banks.</p>
+                    </div>
+                </div>
+
+                <!-- Delivery Check -->
+                <div class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+                    <h3 class="font-black text-slate-900 text-lg mb-6 flex items-center gap-3">
+                        <div class="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center text-slate-600"><i class="fas fa-truck-fast text-sm"></i></div>
+                        Delivery Capability
+                    </h3>
+                    <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                        <div class="relative flex-1 group">
+                            <i class="fas fa-map-marker-alt absolute left-4 top-1/2 -translate-y-1/2 text-red-500 transition-transform group-focus-within:-translate-y-2 group-focus-within:text-xl"></i>
+                            <input type="text" [(ngModel)]="deliveryLocation" placeholder="Enter Pincode" 
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl py-4 pl-12 pr-4 text-sm font-bold text-slate-800 outline-none focus:bg-white focus:border-red-400 focus:ring-4 focus:ring-red-100 transition-all">
+                        </div>
+                        <button (click)="checkDelivery()" class="w-full sm:w-auto bg-slate-100 text-slate-700 hover:bg-slate-200 px-8 py-4 rounded-xl font-bold text-sm tracking-wide active:scale-95 transition-all">Check Radius</button>
+                    </div>
+                    <div class="flex items-center gap-3 text-sm bg-emerald-50 text-emerald-700 py-3 px-4 rounded-xl border border-emerald-100 inline-flex">
+                        <i class="fas fa-check-circle"></i>
+                        <span class="font-bold">{{ getDeliveryEstimate(product) }} &mdash; Free Delivery Applied</span>
+                    </div>
+                </div>
+
+                <!-- Comprehensive Lists -->
+                <div class="bg-white rounded-[2rem] border border-slate-200 overflow-hidden shadow-sm flex flex-col xl:flex-row divide-y xl:divide-y-0 xl:divide-x divide-slate-100">
+                    
+                    <!-- Highlights -->
+                    <div class="p-6 sm:p-8 xl:w-1/2">
+                        <h3 class="font-black text-slate-900 text-base mb-6 flex items-center gap-2"><i class="fas fa-bolt text-amber-500"></i> Core Hardware Highlights</h3>
+                        <ul class="space-y-4">
+                            @for (feature of product.features; track feature) {
+                                <li class="flex items-start gap-3 group">
+                                    <div class="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center shrink-0 mt-0.5 text-indigo-600 group-hover:scale-125 group-hover:bg-indigo-100 transition-all"><i class="fas fa-check text-[10px]"></i></div>
+                                    <span class="text-sm font-semibold text-slate-700 leading-relaxed">{{ feature }}</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    
+                    <!-- Specs -->
+                    <div class="p-6 sm:p-8 xl:w-1/2 bg-slate-50/50">
+                        <h3 class="font-black text-slate-900 text-base mb-6 flex items-center gap-2"><i class="fas fa-microchip text-slate-400"></i> Deep Technical Specifications</h3>
+                        <div class="space-y-4">
+                            @for (spec of product.specs | keyvalue; track spec.key) {
+                            <div class="flex flex-col gap-1 border-b border-slate-100 pb-3 last:border-0 hover:pl-2 transition-all">
+                                <dt class="text-[11px] font-black text-slate-400 uppercase tracking-widest">{{ spec.key }}</dt>
+                                <dd class="text-sm font-bold text-slate-900">{{ spec.value }}</dd>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Sticky Mobile Actions -->
+        <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-slate-200 p-4 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.15)] z-50 pb-safe">
+            <div class="grid grid-cols-[1fr_1.5fr] gap-3 max-w-md mx-auto">
+                <button (click)="addToCart(product)" [disabled]="product.stock <= 0" 
+                    class="h-14 bg-slate-50 border-2 border-slate-200 text-slate-800 rounded-xl font-bold text-xs uppercase tracking-wide active:scale-95 transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-shopping-bag"></i> Bag
+                </button>
+                <button (click)="buyNow(product)" [disabled]="product.stock <= 0" 
+                    class="h-14 bg-red-600 text-white rounded-xl font-bold text-sm uppercase tracking-wide shadow-lg shadow-red-600/30 active:bg-indigo-700 active:scale-95 transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-bolt text-yellow-300"></i> Buy Now
+                </button>
+            </div>
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="mt-24 border-t border-slate-200 pt-16">
+            <h2 class="text-2xl sm:text-4xl font-black text-slate-900 mb-12">Device Real-World Intel</h2>
+
+            <div class="grid md:grid-cols-[1.5fr_1fr] gap-12 lg:gap-24">
+                
+                <!-- Review List -->
+                <div class="space-y-6 lg:space-y-8 order-2 md:order-1">
+                    @for (review of product.reviews; track review.id) {
+                    <div class="bg-white p-6 sm:p-8 rounded-[2xl] border border-slate-200 shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="flex gap-4 sm:gap-6 items-start">
+                            <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-black text-xl shadow-inner shrink-0">
+                                {{ review.userName.charAt(0) }}
+                            </div>
+                            <div class="flex-1 space-y-3 w-full">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                                    <h4 class="font-bold text-slate-900 text-base sm:text-lg">{{ review.userName }}</h4>
+                                    <span class="text-[11px] font-bold text-slate-400">{{ review.date | date:'mediumDate' }}</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="flex text-yellow-400 text-xs gap-0.5">
+                                        @for (s of [1,2,3,4,5]; track s) { <i class="fas fa-star" [class.opacity-20]="s > review.rating"></i> }
+                                    </div>
+                                    <span class="flex items-center gap-1 text-[10px] font-bold uppercase text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                                        <i class="fas fa-badge-check"></i> Verified
+                                    </span>
+                                </div>
+                                <p class="text-slate-600 leading-relaxed font-medium text-sm">{{ review.comment }}</p>
+                                
+                                @if (review.images && review.images.length > 0) {
+                                    <div class="flex flex-wrap gap-2 pt-2">
+                                        @for (img of review.images; track img) {
+                                            <div class="relative w-20 h-20 rounded-lg overflow-hidden border border-slate-200 shadow-sm cursor-pointer hover:scale-105 transition-transform">
+                                                <img [src]="img" class="w-full h-full object-cover">
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                
+                                <div class="pt-2">
+                                    <button (click)="markHelpful(review)" class="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-red-600 transition-colors active:scale-95">
+                                        <i class="fas fa-thumbs-up"></i> {{ review.helpfulCount || 0 }} Helpful
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    } @empty {
+                    <div class="bg-white p-12 text-center rounded-[2rem] border border-slate-200 border-dashed">
+                        <p class="text-slate-500 font-medium">No reviews yet. Be the pioneer.</p>
+                    </div>
+                    }
+                </div>
+
+                <!-- Review Score Sticky Card -->
+                <div class="order-1 md:order-2">
+                    <div class="bg-slate-900 text-white p-8 rounded-[2rem] sticky top-8 shadow-2xl shadow-slate-900/20 text-center space-y-6 transform hover:scale-[1.02] transition-transform">
+                        <h3 class="font-black text-lg">Overall Rating</h3>
+                        <div>
+                            <div class="text-7xl font-black mb-2">{{ product.rating | number:'1.1-1' }}<span class="text-3xl text-slate-500">/5</span></div>
+                            <div class="flex justify-center text-yellow-400 text-xl gap-1 mb-2">
+                                @for (s of [1,2,3,4,5]; track s) { <i class="fas fa-star" [class.opacity-20]="s > product.rating"></i> }
+                            </div>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ product.reviewsCount || 0 }} Verified Profiles</p>
+                        </div>
+                        @if (!showReviewForm) {
+                            <button (click)="showReviewForm = true" class="w-full bg-red-600 hover:bg-red-500 py-4 rounded-xl font-bold shadow-lg shadow-red-600/30 active:scale-95 transition-all text-sm uppercase tracking-wider">
+                                Publish Review
+                            </button>
+                        } @else {
+                            <div class="bg-slate-800 p-6 rounded-xl mt-4 space-y-4 text-left border border-slate-700">
+                                <h4 class="font-bold text-white mb-2 text-sm uppercase tracking-wide">Write your review</h4>
+                                
+                                <div class="flex text-yellow-400 gap-2 mb-4">
+                                    @for (s of [1, 2, 3, 4, 5]; track s) {
+                                        <button (click)="setRating(s)" class="hover:scale-125 transition-transform">
+                                            <i class="fas fa-star" [class.opacity-30]="s > reviewRating"></i>
+                                        </button>
+                                    }
+                                </div>
+
+                                <textarea [(ngModel)]="reviewComment" 
+                                    placeholder="Share your experience with this device..." 
+                                    class="w-full bg-slate-900 text-white border border-slate-700 rounded-lg p-3 text-sm focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none resize-none h-24 placeholder:text-slate-500"></textarea>
+
+                                <!-- Image Upload UI -->
+                                <div class="space-y-3">
+                                    <label class="cursor-pointer inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-indigo-400 transition-colors bg-slate-800/50 px-3 py-2 rounded-lg border border-slate-700 hover:border-indigo-500/50">
+                                        <i class="fas fa-camera"></i> Attach Photos
+                                        <input type="file" multiple accept="image/*" (change)="onImageUpload($event)" class="hidden">
+                                    </label>
+
+                                    @if (reviewImages.length > 0) {
+                                    <div class="flex flex-wrap gap-2">
+                                        @for (img of reviewImages; track img; let i = $index) {
+                                        <div class="relative w-16 h-16 rounded-lg overflow-hidden border border-slate-700 group">
+                                            <img [src]="img" class="w-full h-full object-cover">
+                                            <button (click)="removeReviewImage(i)" class="absolute top-1 right-1 w-5 h-5 bg-black/60 hover:bg-rose-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                                                <i class="fas fa-times text-[10px]"></i>
+                                            </button>
+                                        </div>
+                                        }
+                                    </div>
+                                    }
+                                </div>
+
+                                <div class="flex gap-3 mt-4">
+                                    <button (click)="showReviewForm = false" class="flex-1 bg-slate-700 hover:bg-slate-600 py-3 rounded-lg text-xs font-bold transition-colors">Cancel</button>
+                                    <button (click)="submitReview(product)" [disabled]="isSubmitting || reviewRating === 0 || !reviewComment" class="flex-1 bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed py-3 rounded-lg text-xs font-bold transition-colors shadow-lg">
+                                        {{ isSubmitting ? 'Posting...' : 'Submit' }}
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    } @else {
+    <div class="h-screen w-full flex items-center justify-center">
+        <div class="w-12 h-12 border-4 border-slate-200 border-t-red-600 rounded-full animate-spin"></div>
+    </div>
+    }
+</div>

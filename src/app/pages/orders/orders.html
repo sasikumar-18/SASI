@@ -1,0 +1,236 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 min-h-screen">
+    <div class="space-y-16 animate-reveal">
+        <div class="space-y-4">
+            <span class="text-red-500 font-black text-[10px] uppercase tracking-[0.5em]">Inventory History</span>
+            <h1 class="text-7xl font-black text-main tracking-tighter italic uppercase">MY DIGITAL <br> <span
+                    class="text-muted opacity-30">VAULT.</span></h1>
+        </div>
+
+        @if (orders$ | async; as orders) {
+        @if (orders.length > 0) {
+        <div class="space-y-10">
+            @for (order of orders; track order._id) {
+            <div
+                class="glass p-12 rounded-[4rem] border-glass-border shadow-2xl space-y-10 group hover:bg-white/[0.02] transition-all">
+                <div
+                    class="flex flex-col md:flex-row md:items-center justify-between gap-8 border-b border-glass-border pb-10">
+                    <div class="space-y-2">
+                        <p class="text-[10px] font-black text-muted uppercase tracking-[0.4em]">Order ID</p>
+                        <p class="text-xl font-black text-main italic uppercase">{{ order._id.slice(-12) }}</p>
+                    </div>
+                    <div class="flex flex-wrap gap-8">
+                        <div class="space-y-2">
+                            <p class="text-[10px] font-black text-muted uppercase tracking-[0.4em]">Initialization</p>
+                            <p class="text-lg font-black text-main italic">{{ order.createdAt | date:'mediumDate' }}</p>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-[10px] font-black text-muted uppercase tracking-[0.4em]">Total Asset Value
+                            </p>
+                            <p class="text-lg font-black text-red-500 italic uppercase">₹{{
+                                order.totalAmount.toLocaleString() }}
+                            </p>
+                        </div>
+                        <div class="flex items-center">
+                            <span
+                                [class]="'px-6 py-2.5 rounded-full text-[9px] font-black uppercase tracking-[0.3em] ' + getStatusColor(getDisplayStatus(order))">
+                                {{ getDisplayStatus(order) }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-16">
+                    <!-- Items List -->
+                    <div class="space-y-6">
+                        <p class="text-[10px] font-black text-muted uppercase tracking-[0.5em] mb-6">Manifest Units</p>
+                        <div class="space-y-6">
+                            @for (item of order.items; track item.productId) {
+                            <div class="flex items-center space-x-6">
+                                <div class="w-16 h-16 rounded-2xl bg-bg-secondary p-3 border border-glass-border">
+                                    <img [src]="item.imageUrl" class="w-full h-full object-contain"
+                                        onerror="this.onerror=null; this.src='https://placehold.co/100x100/101010/white?text=Nexus'">
+                                </div>
+                                <div class="flex-grow">
+                                    <p class="font-black text-main text-base italic uppercase">{{ item.name }}</p>
+                                    <p class="text-[10px] font-black text-muted uppercase tracking-widest mt-1">
+                                        Quantity: {{ item.quantity
+                                        }}</p>
+                                </div>
+                                <span class="font-black text-main italic">₹{{ item.price.toLocaleString() }}</span>
+                            </div>
+                            }
+                        </div>
+
+                        <!-- Tracking Timeline (Shows when active) -->
+                        @if (trackingOrderId === order._id) {
+                        <div class="mt-8 p-6 bg-secondary/50 rounded-3xl border border-glass-border animate-reveal">
+                            <p class="text-[9px] font-black text-main uppercase tracking-[0.3em] mb-6">Signal Tracker
+                            </p>
+                            <div class="relative flex justify-between items-center">
+                                <!-- Progress Line -->
+                                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-glass-border -z-10">
+                                </div>
+                                <div class="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-red-600 transition-all duration-1000 -z-10"
+                                    [style.width]="getProgressWidth(getDisplayStatus(order))">
+                                </div>
+
+                                @for (step of getTrackingSteps(getDisplayStatus(order)); track step) {
+                                <div class="flex flex-col items-center gap-2 bg-bg-secondary px-2">
+                                    <div class="w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-500"
+                                        [class.border-red-600]="isStepCompleted(getDisplayStatus(order), step)"
+                                        [class.bg-red-600]="isStepCompleted(getDisplayStatus(order), step)"
+                                        [class.text-white]="isStepCompleted(getDisplayStatus(order), step)"
+                                        [class.border-glass-border]="!isStepCompleted(getDisplayStatus(order), step)"
+                                        [class.text-muted]="!isStepCompleted(getDisplayStatus(order), step)">
+                                        <i class="fas" [class.fa-box]="step === 'Ordered'"
+                                            [class.fa-truck]="step === 'Shipped'" [class.fa-home]="step === 'Delivered'"
+                                            [class.fa-undo]="step === 'Return Requested'"
+                                            [class.fa-file-signature]="step === 'Return Approved'"
+                                            [class.fa-money-bill-wave]="step === 'Refund Initiated'"
+                                            [class.fa-check-circle]="step === 'Refunded'">
+                                        </i>
+                                    </div>
+                                    <span
+                                        class="text-[8px] font-black uppercase tracking-widest text-center max-w-[80px]"
+                                        [class.text-red-500]="isStepCompleted(getDisplayStatus(order), step)"
+                                        [class.text-muted]="!isStepCompleted(getDisplayStatus(order), step)">{{ step
+                                        }}</span>
+                                </div>
+                                }
+                            </div>
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Shipping Info -->
+                    <div class="space-y-6">
+                        <p class="text-[10px] font-black text-muted uppercase tracking-[0.5em] mb-6">Sector Destination
+                        </p>
+                        <div class="bg-bg-secondary/50 p-8 rounded-3xl border border-glass-border space-y-4">
+                            <div class="flex items-start space-x-4">
+                                <i class="fas fa-map-marker-alt text-red-500 mt-1"></i>
+                                <div class="space-y-1">
+                                    <p class="text-main font-black text-sm uppercase">{{ order.shippingAddress.name }}
+                                    </p>
+                                    <p class="text-muted text-sm font-semibold leading-relaxed">
+                                        {{ order.shippingAddress.address }}, {{ order.shippingAddress.city }}<br>
+                                        {{ order.shippingAddress.state }} - {{ order.shippingAddress.zip }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-4 pt-4 border-t border-glass-border">
+                                <i class="fas fa-phone text-red-500"></i>
+                                <p class="text-main font-black text-xs">{{ order.shippingAddress.phone }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions (Moved out of grid for better layout) -->
+                <div class="space-y-6 pt-10 border-t border-glass-border">
+                    <p class="text-[10px] font-black text-muted uppercase tracking-[0.5em] mb-4">Command Options
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <button (click)="trackOrder(order._id)"
+                            class="px-8 py-4 bg-bg-secondary border border-glass-border hover:border-red-500/50 rounded-2xl text-[10px] font-black text-main uppercase tracking-[0.3em] flex items-center space-x-3 transition-all hover:scale-105">
+                            <i class="fas fa-radar text-red-500"></i>
+                            <span>Track Signal</span>
+                        </button>
+                        <button (click)="buyAgain(order)"
+                            class="px-8 py-4 bg-bg-secondary border border-glass-border hover:border-indigo-500/50 rounded-2xl text-[10px] font-black text-main uppercase tracking-[0.3em] flex items-center space-x-3 transition-all hover:scale-105">
+                            <i class="fas fa-sync-alt text-indigo-500"></i>
+                            <span>Buy Again</span>
+                        </button>
+                        <button (click)="printInvoice(order)"
+                            class="px-8 py-4 bg-bg-secondary border border-glass-border hover:border-emerald-500/50 rounded-2xl text-[10px] font-black text-main uppercase tracking-[0.3em] flex items-center space-x-3 transition-all hover:scale-105">
+                            <i class="fas fa-file-invoice text-emerald-500"></i>
+                            <span>Print Invoice</span>
+                        </button>
+                        @if (getDisplayStatus(order) === 'Delivered') {
+                        <button (click)="openReturnModal(order._id)"
+                            class="px-8 py-4 bg-bg-secondary border border-glass-border hover:border-orange-500/50 rounded-2xl text-[10px] font-black text-main uppercase tracking-[0.3em] flex items-center space-x-3 transition-all hover:scale-105">
+                            <i class="fas fa-undo text-orange-500"></i>
+                            <span>Return Product</span>
+                        </button>
+                        }
+                        @if (getDisplayStatus(order) === 'Ordered') {
+                        <button (click)="cancelOrder(order._id)"
+                            class="px-8 py-4 bg-bg-secondary border border-glass-border hover:border-red-500/50 rounded-2xl text-[10px] font-black text-main uppercase tracking-[0.3em] flex items-center space-x-3 transition-all hover:scale-105">
+                            <i class="fas fa-times-circle text-red-500"></i>
+                            <span>Abort Order</span>
+                        </button>
+                        }
+                        <!-- Demo Control -->
+                        <button (click)="advanceOrder(order._id, getDisplayStatus(order))"
+                            class="px-8 py-4 bg-bg-secondary border border-glass-border hover:border-blue-500/50 hover:bg-blue-500/10 rounded-2xl text-[10px] font-black text-main uppercase tracking-[0.3em] flex items-center space-x-3 transition-all hover:scale-105">
+                            <i class="fas fa-forward text-blue-500"></i>
+                            <span>Simulate Transit</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            }
+        </div>
+        } @else {
+        <div class="text-center py-40 glass rounded-[5rem] p-24 border-glass-border shadow-2xl">
+            <div
+                class="w-32 h-32 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-2xl shadow-red-500/10">
+                <i class="fas fa-box-open text-5xl"></i>
+            </div>
+            <h2 class="text-5xl font-black text-main italic uppercase tracking-tighter">VAULT IS EMPTY.</h2>
+            <p class="text-xl text-muted font-semibold mt-6 mb-12">No active hardware detected in your
+                history.</p>
+            <button routerLink="/products"
+                class="px-12 py-6 bg-red-600 text-white rounded-[2rem] font-black text-[10px] uppercase tracking-[0.4em] shadow-2xl hover:scale-105 transition-all">
+                BROWSE REPOSITORY
+            </button>
+        </div>
+        }
+        } @else {
+        <div class="flex justify-center py-40">
+            <div class="w-16 h-16 border-4 border-red-500/30 border-t-red-500 rounded-full animate-spin"></div>
+        </div>
+        }
+    </div>
+
+    <!-- Return/Refund Modal -->
+    @if (showReturnReasonModal) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-reveal">
+        <div class="glass border border-orange-500/30 w-full max-w-lg rounded-[3rem] p-10 space-y-8 shadow-2xl shadow-orange-500/20 relative">
+            <button (click)="closeReturnModal()" class="absolute top-8 right-8 text-muted hover:text-main transition-colors">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            <div class="space-y-2">
+                <h3 class="text-3xl font-black text-main uppercase italic">Return Protocol</h3>
+                <p class="text-sm font-black tracking-widest text-orange-500">INITIATE HARDWARE RECALL</p>
+            </div>
+            
+            <div class="space-y-6">
+                <!-- Reason Selection -->
+                <div class="space-y-2">
+                    <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Reason for Return</label>
+                    <select [(ngModel)]="returnReason" class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-orange-500 transition-all text-main font-bold appearance-none">
+                        <option value="" disabled>Select a Reason</option>
+                        <option value="Damaged">Damaged or Defective Hardware</option>
+                        <option value="Wrong item">Wrong Item Received</option>
+                        <option value="Missing parts">Missing Components / Parts</option>
+                        <option value="Not needed">Changed Mind / Not Needed</option>
+                    </select>
+                </div>
+
+                <!-- Textarea details -->
+                <div class="space-y-2">
+                    <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Additional Specifications</label>
+                    <textarea [(ngModel)]="returnReasonDetails" rows="3" placeholder="Explain the defect/issue in detail..."
+                        class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-orange-500 transition-all text-main font-bold resize-none"></textarea>
+                </div>
+            </div>
+
+            <button (click)="submitReturn()" [disabled]="!returnReason"
+                class="w-full py-5 bg-orange-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.3em] flex items-center justify-center space-x-3 transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                <i class="fas fa-file-export pr-2"></i> Confirm Return Request
+            </button>
+        </div>
+    </div>
+    }
+</div>

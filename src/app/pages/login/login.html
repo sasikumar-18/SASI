@@ -1,0 +1,106 @@
+<div class="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden bg-gray-50/50">
+  <!-- Animated Background Blobs -->
+  <div
+    class="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob">
+  </div>
+  <div
+    class="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000">
+  </div>
+  <div
+    class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000">
+  </div>
+  <div
+    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-100/40 rounded-full blur-[100px] -z-10">
+  </div>
+
+  <!-- Login Card -->
+  <div
+    class="w-full max-w-md bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-2xl shadow-red-900/5 border border-white/20 p-8 sm:p-10 relative z-10 stagger-1">
+
+    <!-- Header -->
+    <div class="text-center mb-10 stagger-2">
+      <div
+        class="group w-20 h-20 bg-gradient-to-br from-red-500 to-rose-600 rounded-2xl flex items-center justify-center text-white mx-auto mb-6 shadow-lg shadow-red-500/30 transform transition-all duration-300 hover:scale-110 hover:rotate-3">
+        <lucide-icon name="LogIn"
+          class="w-10 h-10 transition-transform duration-300 group-hover:-translate-x-1"></lucide-icon>
+      </div>
+      <h1 class="text-3xl font-black text-slate-800 tracking-tight">Welcome Back</h1>
+      <p class="text-slate-500 mt-3 font-medium">Log in to your MobiShop account</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="space-y-6 stagger-3">
+      @if (error) {
+      <div
+        class="p-4 bg-red-50/80 backdrop-blur-sm border border-red-100 text-red-600 rounded-2xl text-sm font-medium animate-pulse flex items-center gap-3">
+        <lucide-icon name="AlertCircle" class="w-5 h-5 shrink-0"></lucide-icon>
+        {{ error }}
+      </div>
+      }
+
+      <!-- Email Field -->
+      <div class="space-y-1 group">
+        <div class="relative">
+          <input type="email" [(ngModel)]="email" name="email" id="email" required
+            class="peer w-full px-5 py-4 bg-gray-50/50 border-2 border-gray-100 rounded-2xl outline-none transition-all duration-300 focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 placeholder-transparent text-gray-700 font-medium"
+            placeholder="Email Address" />
+          <label for="email" class="absolute left-5 top-4 transition-all duration-300 pointer-events-none bg-transparent px-1 rounded
+            text-xs text-gray-500 -translate-y-7
+            peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:translate-y-0
+            peer-focus:-translate-y-7 peer-focus:text-xs peer-focus:text-red-500">
+            Email Address
+          </label>
+          <div
+            class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 peer-focus:text-red-500 transition-colors duration-300">
+            <lucide-icon name="Mail" class="w-5 h-5"></lucide-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="space-y-1 group">
+        <div class="relative">
+          <input type="password" [(ngModel)]="password" name="password" id="password" required
+            class="peer w-full px-5 py-4 bg-gray-50/50 border-2 border-gray-100 rounded-2xl outline-none transition-all duration-300 focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 placeholder-transparent text-gray-700 font-medium"
+            placeholder="Password" />
+          <label for="password" class="absolute left-5 top-4 transition-all duration-300 pointer-events-none bg-transparent px-1 rounded
+             text-xs text-gray-500 -translate-y-7
+             peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:translate-y-0
+             peer-focus:-translate-y-7 peer-focus:text-xs peer-focus:text-red-500">
+            Password
+          </label>
+          <div
+            class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 peer-focus:text-red-500 transition-colors duration-300">
+            <lucide-icon name="Lock" class="w-5 h-5"></lucide-icon>
+          </div>
+        </div>
+        <div class="flex justify-end mt-2">
+          <a href="#" class="text-xs font-semibold text-slate-400 hover:text-red-600 transition-colors">Forgot
+            Password?</a>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="loading"
+        class="group w-full py-4 bg-gradient-to-r from-red-600 to-rose-600 text-white rounded-2xl font-bold text-lg hover:shadow-lg hover:shadow-red-500/30 transition-all duration-300 transform hover:-translate-y-1 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center relative overflow-hidden">
+        <div
+          class="absolute inset-0 w-full h-full bg-white/20 group-hover:translate-x-full transition-transform duration-500 -skew-x-12 -translate-x-full">
+        </div>
+
+        @if (loading) {
+        <div class="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+        } @else {
+        <span class="flex items-center gap-2 relative z-10">
+          Log In
+          <lucide-icon name="ArrowRight" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></lucide-icon>
+        </span>
+        }
+      </button>
+    </form>
+
+    <div class="mt-10 text-center text-sm stagger-4">
+      <span class="text-slate-500">Don't have an account?</span>
+      <a routerLink="/register"
+        class="ml-1 font-bold text-red-600 hover:text-red-700 hover:underline decoration-2 underline-offset-4 transition-all">Create
+        Account</a>
+    </div>
+  </div>
+</div>

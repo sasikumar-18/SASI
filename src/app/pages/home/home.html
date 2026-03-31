@@ -1,0 +1,256 @@
+<main class="min-h-screen">
+  <!-- Hero Section -->
+  <section class="relative py-24 overflow-hidden min-h-[90vh] flex items-center px-4 sm:px-6 lg:px-8">
+    <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/20 blur-[180px] -z-10 animate-pulse"></div>
+    <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/10 blur-[120px] -z-10"></div>
+
+    <div class="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-20 items-center">
+      <div class="space-y-12 order-2 lg:order-1 animate-reveal">
+        <div
+          class="inline-flex items-center space-x-4 bg-white/5 dark:bg-white/10 px-6 py-3 rounded-full border border-white/10 dark:border-white/20 shadow-xl">
+          <span class="relative flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+          </span>
+          <span class="text-[11px] font-black uppercase tracking-[0.4em] text-red-600 dark:text-red-300">New Era
+            of Accessories</span>
+        </div>
+
+        <h1 class="text-7xl md:text-9xl font-black leading-[0.85] tracking-tighter text-main">
+          MOBILE <br>
+          <span class="bg-gradient-to-r from-red-500 via-red-700 to-white bg-clip-text text-transparent">ULTRA
+            GEAR.</span>
+        </h1>
+
+        @if (authService.currentUser(); as user) {
+        <p class="text-2xl text-orange-500/80 font-black tracking-widest uppercase mt-4">
+          <i class="fas fa-hand-sparkles mr-2 text-red-500"></i> Welcome Back, {{ user.displayName?.split(' ')[0] || 'Commander' }}
+        </p>
+        }
+
+        <p class="text-2xl text-muted max-w-xl leading-relaxed font-semibold mt-4">
+          Synchronize your lifestyle with luxury hardware. Engineered for the digital elite.
+        </p>
+
+        <div class="flex flex-wrap gap-8 pt-6">
+          <button routerLink="/products"
+            class="px-12 py-6 bg-red-600 hover:bg-red-500 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] shadow-[0_30px_60px_-15px_rgba(220,38,38,0.5)] flex items-center space-x-4 transition-all hover:scale-[1.05] active:scale-95 group">
+            <span>EXPLORE VAULT</span>
+            <i class="fas fa-arrow-right group-hover:translate-x-3 transition-transform"></i>
+          </button>
+          <button
+            class="px-12 py-6 glass rounded-[2rem] font-black text-[10px] uppercase tracking-[0.4em] transition-all flex items-center space-x-4 hover:bg-black/5 dark:hover:bg-white/5 text-main">
+            <i class="fas fa-play text-[8px] text-red-600"></i>
+            <span>PHILOSOPHY</span>
+          </button>
+        </div>
+
+        <div class="flex items-center space-x-12 pt-16 border-t border-glass-border">
+          <div class="animate-reveal-delay-1">
+            <p class="text-5xl font-black text-main">160+</p>
+            <p class="text-[10px] uppercase font-black text-muted tracking-[0.3em] mt-2">Elite Units</p>
+          </div>
+          <div class="w-px h-16 bg-glass-border"></div>
+          <div class="animate-reveal-delay-2">
+            <p class="text-5xl font-black text-main">24H</p>
+            <p class="text-[10px] uppercase font-black text-muted tracking-[0.3em] mt-2">Global Sync</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative order-1 lg:order-2 animate-scale-in">
+        <div
+          class="absolute inset-0 bg-gradient-to-br from-red-500/30 to-red-600/30 blur-3xl -z-10 rounded-full scale-90 animate-pulse">
+        </div>
+        <div class="relative glass rounded-[5rem] p-4 sm:p-6 overflow-hidden group shadow-2xl shadow-red-500/20">
+          <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=800"
+            class="w-full h-auto rounded-[4.5rem] shadow-2xl transform group-hover:scale-105 transition-transform duration-1000 animate-float">
+
+          <div
+            class="absolute bottom-12 left-12 right-12 p-10 glass rounded-[3rem] translate-y-20 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700 backdrop-blur-3xl shadow-2xl">
+            <p class="text-[10px] font-black text-red-600 dark:text-red-400 mb-2 uppercase tracking-[0.4em]">
+              Weekly Highlight</p>
+            <h3 class="text-3xl font-black text-main italic">ANC Studio Buds</h3>
+            <p class="text-muted text-lg mt-3 font-semibold leading-tight">Biometric sound isolation, crafted for
+              perfection.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="py-40 px-4 sm:px-6 lg:px-8 bg-secondary transition-colors duration-500">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-end mb-24 gap-12 animate-reveal">
+        <div>
+          <span class="text-red-600 font-black text-xs uppercase tracking-[0.5em] mb-4 block">Segments</span>
+          <h2 class="text-7xl font-black tracking-tighter text-main italic uppercase">SELECT YOUR <br> <span
+              class="text-muted opacity-30">VIBE.</span></h2>
+        </div>
+        <button routerLink="/products"
+          class="group flex items-center space-x-6 text-[10px] font-black uppercase tracking-[0.3em] text-main hover:text-red-600 transition-all">
+          <span>View All Collections</span>
+          <div
+            class="w-16 h-16 rounded-full border border-glass-border flex items-center justify-center group-hover:bg-red-600 group-hover:border-red-600 group-hover:shadow-2xl transition-all duration-500">
+            <i class="fas fa-arrow-right text-xs transition-colors"></i>
+          </div>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+        <div [routerLink]="['/products']" [queryParams]="{category: 'mobile'}"
+          class="group cursor-pointer glass p-12 rounded-[4rem] card-hover animate-reveal-delay-1">
+          <div
+            class="bg-rose-500/10 w-24 h-24 rounded-3xl flex items-center justify-center mb-12 group-hover:scale-110 transition-transform duration-500 shadow-2xl shadow-rose-500/20">
+            <i class="fas fa-mobile-screen text-4xl text-rose-500"></i>
+          </div>
+          <h3 class="text-3xl font-black mb-4 tracking-tighter text-main italic">Mobiles</h3>
+          <p
+            class="text-xs font-black text-muted group-hover:text-rose-500 transition-colors flex items-center tracking-widest uppercase">
+            Mobile Vault <i class="fas fa-chevron-right ml-3 text-[10px]"></i>
+          </p>
+        </div>
+
+        <div [routerLink]="['/products']" [queryParams]="{category: 'audio'}"
+          class="group cursor-pointer glass p-12 rounded-[4rem] card-hover animate-reveal-delay-2">
+          <div
+            class="bg-amber-500/10 w-24 h-24 rounded-3xl flex items-center justify-center mb-12 group-hover:scale-110 transition-transform duration-500 shadow-2xl shadow-amber-500/20">
+            <i class="fas fa-head text-4xl text-amber-500"></i>
+          </div>
+          <h3 class="text-3xl font-black mb-4 tracking-tighter text-main italic">Acoustics</h3>
+          <p
+            class="text-xs font-black text-muted group-hover:text-amber-500 transition-colors flex items-center tracking-widest uppercase">
+            Audio Nexus <i class="fas fa-chevron-right ml-3 text-[10px]"></i>
+          </p>
+        </div>
+
+        <div [routerLink]="['/products']" [queryParams]="{category: 'wearable'}"
+          class="group cursor-pointer glass p-12 rounded-[4rem] card-hover animate-reveal-delay-1">
+          <div
+            class="bg-red-600/10 w-24 h-24 rounded-3xl flex items-center justify-center mb-12 group-hover:scale-110 transition-transform duration-500 shadow-2xl shadow-red-600/20">
+            <i class="fas fa-stopwatch text-4xl text-red-600"></i>
+          </div>
+          <h3 class="text-3xl font-black mb-4 tracking-tighter text-main italic">Wearables</h3>
+          <p
+            class="text-xs font-black text-muted group-hover:text-red-600 transition-colors flex items-center tracking-widest uppercase">
+            Digital Gear <i class="fas fa-chevron-right ml-3 text-[10px]"></i>
+          </p>
+        </div>
+
+        <div [routerLink]="['/products']" [queryParams]="{category: 'tablet'}"
+          class="group cursor-pointer glass p-12 rounded-[4rem] card-hover animate-reveal-delay-2">
+          <div
+            class="bg-emerald-500/10 w-24 h-24 rounded-3xl flex items-center justify-center mb-12 group-hover:scale-110 transition-transform duration-500 shadow-2xl shadow-emerald-500/20">
+            <i class="fas fa-tablet-screen-button text-4xl text-emerald-500"></i>
+          </div>
+          <h3 class="text-3xl font-black mb-4 tracking-tighter text-main italic">Tablets</h3>
+          <p
+            class="text-xs font-black text-muted group-hover:text-emerald-500 transition-colors flex items-center tracking-widest uppercase">
+            Prime Slates <i class="fas fa-chevron-right ml-3 text-[10px]"></i>
+          </p>
+        </div>
+
+        <!-- NEW: Gaming -->
+        <div [routerLink]="['/products']" [queryParams]="{category: 'gaming'}"
+          class="group cursor-pointer glass p-12 rounded-[4rem] card-hover animate-reveal-delay-1">
+          <div
+            class="bg-purple-500/10 w-24 h-24 rounded-3xl flex items-center justify-center mb-12 group-hover:scale-110 transition-transform duration-500 shadow-2xl shadow-purple-500/20">
+            <i class="fas fa-gamepad text-4xl text-purple-500"></i>
+          </div>
+          <h3 class="text-3xl font-black mb-4 tracking-tighter text-main italic">Gaming</h3>
+          <p
+            class="text-xs font-black text-muted group-hover:text-purple-500 transition-colors flex items-center tracking-widest uppercase">
+            Game Rigs <i class="fas fa-chevron-right ml-3 text-[10px]"></i>
+          </p>
+        </div>
+
+        <!-- NEW: Laptops -->
+        <div [routerLink]="['/products']" [queryParams]="{category: 'laptop'}"
+          class="group cursor-pointer glass p-12 rounded-[4rem] card-hover animate-reveal-delay-2">
+          <div
+            class="bg-red-500/10 w-24 h-24 rounded-3xl flex items-center justify-center mb-12 group-hover:scale-110 transition-transform duration-500 shadow-2xl shadow-blue-500/20">
+            <i class="fas fa-laptop text-4xl text-red-500"></i>
+          </div>
+          <h3 class="text-3xl font-black mb-4 tracking-tighter text-main italic">Laptops</h3>
+          <p
+            class="text-xs font-black text-muted group-hover:text-red-500 transition-colors flex items-center tracking-widest uppercase">
+            Power Slabs <i class="fas fa-chevron-right ml-3 text-[10px]"></i>
+          </p>
+        </div>
+
+
+        <!-- NEW: Cameras -->
+        <div [routerLink]="['/products']" [queryParams]="{category: 'camera'}"
+          class="group cursor-pointer glass p-12 rounded-[4rem] card-hover animate-reveal-delay-2">
+          <div
+            class="bg-orange-500/10 w-24 h-24 rounded-3xl flex items-center justify-center mb-12 group-hover:scale-110 transition-transform duration-500 shadow-2xl shadow-orange-500/20">
+            <i class="fas fa-camera text-4xl text-orange-500"></i>
+          </div>
+          <h3 class="text-3xl font-black mb-4 tracking-tighter text-main italic">Cameras</h3>
+          <p
+            class="text-xs font-black text-muted group-hover:text-orange-500 transition-colors flex items-center tracking-widest uppercase">
+            Lens Lab <i class="fas fa-chevron-right ml-3 text-[10px]"></i>
+          </p>
+        </div>
+
+        <!-- NEW: TWS Earbuds -->
+        <div [routerLink]="['/products']" [queryParams]="{category: 'tws'}"
+          class="group cursor-pointer glass p-12 rounded-[4rem] card-hover animate-reveal-delay-1">
+          <div
+            class="bg-pink-500/10 w-24 h-24 rounded-3xl flex items-center justify-center mb-12 group-hover:scale-110 transition-transform duration-500 shadow-2xl shadow-pink-500/20">
+            <i class="fas fa-ear-listen text-4xl text-pink-500"></i>
+          </div>
+          <h3 class="text-3xl font-black mb-4 tracking-tighter text-main italic">TWS Buds</h3>
+          <p
+            class="text-xs font-black text-muted group-hover:text-pink-500 transition-colors flex items-center tracking-widest uppercase">
+            True Wireless <i class="fas fa-chevron-right ml-3 text-[10px]"></i>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="py-40 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-32 animate-reveal">
+        <span class="text-red-600 font-black text-xs uppercase tracking-[0.5em] mb-6 block">Elite Selection</span>
+        <h2 class="text-8xl font-black tracking-tighter text-main uppercase italic">THE <span
+            class="bg-gradient-to-r from-red-600 to-white bg-clip-text text-transparent">MANIFESTO.</span></h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
+        @for (product of featuredProducts$ | async; track product.id) {
+        <app-product-card [product]="product" class="h-full animate-reveal"></app-product-card>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Recently Viewed Products -->
+  @if (recentlyViewed$ | async; as recentProducts) {
+  @if (recentProducts.length > 0) {
+  <section class="py-32 bg-secondary/30 relative overflow-hidden border-t border-glass-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center space-x-6 mb-20 animate-reveal">
+        <div
+          class="w-16 h-16 rounded-2xl bg-bg-secondary border border-glass-border flex items-center justify-center shadow-xl">
+          <i class="fas fa-history text-3xl text-red-600"></i>
+        </div>
+        <div>
+          <span class="text-red-500 font-black text-[9px] uppercase tracking-[0.4em] mb-2 block">Resume </span>
+          <h2 class="text-5xl font-black text-main uppercase tracking-tighter italic">Recent Scans</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        @for (product of recentProducts; track product.id) {
+        <app-product-card [product]="product" class="h-full animate-reveal"></app-product-card>
+        }
+      </div>
+    </div>
+  </section>
+  }
+  }
+</main>

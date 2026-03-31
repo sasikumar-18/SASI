@@ -1,0 +1,121 @@
+<div
+  class="glass p-8 rounded-[3.5rem] cursor-pointer group flex flex-col h-full card-hover border-glass-border shadow-2xl shadow-shadow-color"
+  [routerLink]="['/products', product.id]">
+
+  <!-- Image Section -->
+  <div
+    class="relative rounded-[2.5rem] bg-secondary overflow-hidden mb-10 aspect-square flex items-center justify-center p-10 border border-glass-border shadow-inner transition-colors duration-500">
+    <img [src]="product.imageUrl" [alt]="product.name" onerror="this.onerror=null; this.src='/assets/images/default.jpg'" referrerpolicy="no-referrer"
+      class="max-w-full max-h-full w-full h-full object-contain transform group-hover:scale-110 group-hover:rotate-6 transition-transform duration-1000 animate-fade-in img-visible">
+
+    <!-- Hover Overlay -->
+    <div
+      class="absolute inset-0 bg-gradient-to-t from-red-900/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-end p-8">
+      @if (product.stock > 0) {
+      <button (click)="$event.stopPropagation(); addToCart($event)"
+        class="w-full py-5 bg-white text-black rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] shadow-2xl transform translate-y-10 group-hover:translate-y-0 transition-all duration-700 hover:bg-slate-100 active:scale-95">
+        Fast Sync
+      </button>
+      } @else {
+      <button disabled
+        class="w-full py-5 bg-black/50 text-white/50 border border-white/20 rounded-2xl font-black text-[10px] uppercase tracking-[0.3em] shadow-2xl transform translate-y-10 group-hover:translate-y-0 cursor-not-allowed">
+        Out of Stock
+      </button>
+      }
+    </div>
+
+    <!-- Category Badge -->
+    <div class="absolute top-8 left-8 flex flex-col space-y-3">
+      <span
+        class="bg-black/80 backdrop-blur-2xl text-[9px] font-black px-5 py-2.5 rounded-xl border border-white/10 text-white uppercase tracking-[0.4em] shadow-2xl">
+        {{ product.category }}
+      </span>
+      @if (product.category === 'mobile' || product.category === 'tablet') {
+      <span
+        class="bg-emerald-600/90 backdrop-blur-2xl text-[8px] font-black px-4 py-2 rounded-lg border border-emerald-400/20 text-white uppercase tracking-[0.2em] shadow-xl w-fit">
+        Exchange -₹25k
+      </span>
+      }
+    </div>
+
+    <!-- Wishlist Button -->
+    <!-- Wishlist Button -->
+    <button (click)="toggleWishlist($event)" [class.text-red-500]="wishlistService.isInWishlist(product.id)"
+      [class.bg-red-500-10]="wishlistService.isInWishlist(product.id)"
+      [class.border-red-500-50]="wishlistService.isInWishlist(product.id)"
+      [class.bg-white-10]="!wishlistService.isInWishlist(product.id)"
+      [class.text-white-40]="!wishlistService.isInWishlist(product.id)"
+      class="absolute top-8 right-8 w-14 h-14 rounded-2xl backdrop-blur-2xl flex items-center justify-center border transition-all duration-500 transform scale-90 group-hover:scale-100 hover:text-red-500 hover:bg-red-500/10 hover:border-red-500/50"
+      [class.bg-red-500-10-active]="wishlistService.isInWishlist(product.id)"
+      [style.background-color]="wishlistService.isInWishlist(product.id) ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255, 255, 255, 0.1)'"
+      [style.border-color]="wishlistService.isInWishlist(product.id) ? 'rgba(239, 68, 68, 0.5)' : 'rgba(255, 255, 255, 0.1)'">
+
+      @if (wishlistService.isInWishlist(product.id)) {
+      <i class="fas fa-heart text-xl animate-bounce"></i>
+      } @else {
+      <i class="far fa-heart text-xl"></i>
+      }
+    </button>
+    <!-- Compare Button -->
+    <button (click)="toggleCompare($event)" [class.opacity-100]="compareService.isInCompare(product.id)"
+      [class.opacity-0]="!compareService.isInCompare(product.id)"
+      class="absolute top-24 right-8 w-14 h-14 rounded-2xl backdrop-blur-2xl flex items-center justify-center border transition-all duration-500 transform scale-90 group-hover:scale-100 group-hover:opacity-100 hover:text-blue-500 hover:bg-blue-500/10 hover:border-blue-500/50"
+      [style.background-color]="compareService.isInCompare(product.id) ? 'rgba(59, 130, 246, 0.1)' : 'rgba(255, 255, 255, 0.1)'"
+      [style.border-color]="compareService.isInCompare(product.id) ? 'rgba(59, 130, 246, 0.5)' : 'rgba(255, 255, 255, 0.1)'"
+      [style.color]="compareService.isInCompare(product.id) ? '#3b82f6' : 'rgba(255,255,255,0.4)'">
+
+      <i class="fas fa-exchange-alt text-xl transform" [class.rotate-90]="compareService.isInCompare(product.id)"></i>
+    </button>
+  </div>
+
+  <!-- Content Section -->
+  <div class="flex-grow px-2 space-y-4">
+    <div class="flex items-center space-x-2">
+      <div class="flex text-amber-400 space-x-0.5">
+        <i class="fas fa-star text-[9px]"></i>
+        <i class="fas fa-star text-[9px]"></i>
+        <i class="fas fa-star text-[9px]"></i>
+        <i class="fas fa-star text-[9px]"></i>
+        <i class="fas fa-star text-[9px] opacity-20"></i>
+      </div>
+      <span class="text-[10px] text-muted font-black uppercase tracking-widest pl-2">
+        {{ (product.rating * 10).toFixed(0) }}+ Users
+      </span>
+    </div>
+
+    <h3
+      class="text-3xl font-black text-main group-hover:text-red-600 transition-colors tracking-tighter mb-2 leading-none italic uppercase">
+      {{ product.name }}
+    </h3>
+
+    <p
+      class="text-muted text-base font-semibold leading-relaxed line-clamp-2 mb-8 opacity-70 group-hover:opacity-100 transition-all">
+      {{ product.description }}
+    </p>
+  </div>
+
+  <!-- Bottom Section -->
+  <div class="px-2 pt-10 border-t border-glass-border flex items-center justify-between mt-auto">
+    <div class="flex flex-col">
+      <span class="text-[9px] font-black text-muted uppercase tracking-[0.3em] mb-1">MSRP Unit</span>
+      <span class="text-4xl font-black tracking-tighter text-main italic">₹{{ product.price.toLocaleString() }}</span>
+      @if (product.stock <= 0) {
+        <span class="text-[9px] font-black text-red-500 uppercase tracking-widest mt-1">Out of Stock</span>
+      } @else if (product.stock <= 5) {
+        <span class="text-[9px] font-black text-rose-500 uppercase tracking-widest mt-1 animate-pulse">Only {{ product.stock }} Left</span>
+      }
+    </div>
+
+    @if (product.stock > 0) {
+    <button (click)="$event.stopPropagation(); addToCart($event)"
+      class="w-16 h-16 rounded-[1.5rem] bg-main border border-glass-border flex items-center justify-center text-main hover:bg-red-600 hover:border-red-600 hover:text-white transition-all duration-700 shadow-xl group/btn active:scale-90">
+      <i class="fas fa-plus text-xl group-hover/btn:rotate-90 transition-transform duration-700"></i>
+    </button>
+    } @else {
+    <button disabled
+      class="w-16 h-16 rounded-[1.5rem] bg-bg-secondary border border-glass-border flex items-center justify-center text-muted opacity-50 cursor-not-allowed">
+      <i class="fas fa-ban text-xl"></i>
+    </button>
+    }
+  </div>
+</div>

@@ -1,0 +1,474 @@
+[
+  {
+    "name": "iPhone 16 Pro Max",
+    "category": "mobile",
+    "price": 79999,
+    "description": "The iPhone 16 Pro Max redefines innovation with aerospace-grade titanium, the fastest A-series silicon, and pro-grade computational photography."
+  },
+  {
+    "name": "Samsung Galaxy S25 Ultra",
+    "category": "mobile",
+    "description": "The Samsung Galaxy S25 Ultra combines massive AI breakthroughs with a 200MP camera and titanium frame for the ultimate Android experience.",
+    "price": 81999
+  },
+  {
+    "name": "Google Pixel 10 Pro",
+    "category": "mobile",
+    "description": "The Google Pixel 10 Pro is the smartest phone on earth, powered by custom Tensor silicon and Google AI magic.",
+    "price": 83999
+  },
+  {
+    "name": "OnePlus 14 Pro",
+    "category": "mobile",
+    "description": "The OnePlus 14 Pro is a powerhouse with liquid vapor chamber cooling and elite gaming + photography performance.",
+    "price": 85999
+  },
+  {
+    "name": "Xiaomi 15 Ultra",
+    "category": "mobile",
+    "description": "The Xiaomi 15 Ultra is a powerhouse with liquid vapor chamber cooling and elite gaming + photography performance.",
+    "price": 87999
+  },
+  {
+    "name": "Sony Xperia 1 VII",
+    "category": "mobile",
+    "description": "The Sony Xperia 1 VII is a powerhouse with liquid vapor chamber cooling and elite gaming + photography performance.",
+    "price": 89999
+  },
+  {
+    "name": "Nothing Phone 4 Pro",
+    "category": "mobile",
+    "description": "The Nothing Phone 4 Pro is a powerhouse with liquid vapor chamber cooling and elite gaming + photography performance.",
+    "price": 91999
+  },
+  {
+    "name": "Asus ROG Phone 10",
+    "category": "mobile",
+    "description": "The Asus ROG Phone 10 is a powerhouse with liquid vapor chamber cooling and elite gaming + photography performance.",
+    "price": 93999
+  },
+  {
+    "name": "Motorola Edge 60 Ultra",
+    "category": "mobile",
+    "description": "The Motorola Edge 60 Ultra is a powerhouse with liquid vapor chamber cooling and elite gaming + photography performance.",
+    "price": 95999
+  },
+  {
+    "name": "Realme GT 6 Pro",
+    "category": "mobile",
+    "description": "The Realme GT 6 Pro is a powerhouse with liquid vapor chamber cooling and elite gaming + photography performance.",
+    "price": 97999
+  },
+  {
+    "name": "Oppo Find X9 Pro",
+    "category": "mobile",
+    "description": "The Oppo Find X9 Pro is a powerhouse with liquid vapor chamber cooling and elite gaming + photography performance.",
+    "price": 99999
+  },
+  {
+    "name": "Vivo X300 Pro",
+    "category": "mobile",
+    "description": "The Vivo X300 Pro is a powerhouse with liquid vapor chamber cooling and elite gaming + photography performance.",
+    "price": 101999
+  },
+  {
+    "name": "iPhone 16 Pro",
+    "category": "mobile",
+    "description": "The iPhone 16 Pro redefines innovation with aerospace-grade titanium, the fastest A-series silicon, and pro-grade computational photography.",
+    "price": 103999
+  },
+  {
+    "name": "Samsung Galaxy Z Fold 7",
+    "category": "mobile",
+    "description": "The Samsung Galaxy Z Fold 7 combines massive AI breakthroughs with a 200MP camera and titanium frame for the ultimate Android experience.",
+    "price": 105999
+  },
+  {
+    "name": "Google Pixel 10",
+    "category": "mobile",
+    "description": "The Google Pixel 10 is the smartest phone on earth, powered by custom Tensor silicon and Google AI magic.",
+    "price": 107999
+  },
+  {
+    "name": "OnePlus 13",
+    "category": "mobile",
+    "description": "The OnePlus 13 is a powerhouse with liquid vapor chamber cooling and elite gaming + photography performance.",
+    "price": 109999
+  },
+  {
+    "name": "Xiaomi 15 Pro",
+    "category": "mobile",
+    "description": "The Xiaomi 15 Pro is a powerhouse with liquid vapor chamber cooling and elite gaming + photography performance.",
+    "price": 111999
+  },
+  {
+    "name": "Sony Xperia 5 VII",
+    "category": "mobile",
+    "description": "The Sony Xperia 5 VII is a powerhouse with liquid vapor chamber cooling and elite gaming + photography performance.",
+    "price": 113999
+  },
+  {
+    "name": "Nothing Phone 3a",
+    "category": "mobile",
+    "description": "The Nothing Phone 3a is a powerhouse with liquid vapor chamber cooling and elite gaming + photography performance.",
+    "price": 115999
+  },
+  {
+    "name": "Sony WH-1000XM5",
+    "category": "audio",
+    "description": "Industry-leading ANC headphones with 8 mics and 30-hour battery.",
+    "price": 29999
+  },
+  {
+    "name": "Apple AirPods Max",
+    "category": "audio",
+    "description": "Over-ear headphones with H1 chip and spatial audio.",
+    "price": 59900
+  },
+  {
+    "name": "Bose QuietComfort 45",
+    "category": "audio",
+    "description": "Legendary Bose noise cancellation with 24-hour battery.",
+    "price": 24999
+  },
+  {
+    "name": "Sennheiser Momentum 4",
+    "category": "audio",
+    "description": "Audiophile-grade sound with class-leading 60-hour battery.",
+    "price": 27999
+  },
+  {
+    "name": "JBL Tour One M2",
+    "category": "audio",
+    "description": "True Adaptive ANC with 4-mic beamforming and Hi-Res Audio.",
+    "price": 19999
+  },
+  {
+    "name": "Marshall Major V",
+    "category": "audio",
+    "description": "Rock-tuned sound with legendary 80-hour battery life.",
+    "price": 12999
+  },
+  {
+    "name": "Sony WF-1000XM5",
+    "category": "tws",
+    "description": "World's best ANC TWS with LDAC Hi-Res audio.",
+    "price": 19999
+  },
+  {
+    "name": "Apple AirPods Pro 2nd Gen",
+    "category": "tws",
+    "description": "H2-powered ANC with Adaptive Transparency and hearing health.",
+    "price": 24900
+  },
+  {
+    "name": "Samsung Galaxy Buds3 Pro",
+    "category": "tws",
+    "description": "Blade design TWS with Galaxy AI translation features.",
+    "price": 17999
+  },
+  {
+    "name": "Nothing Ear 2",
+    "category": "tws",
+    "description": "Dual-driver TWS with personal ANC and LHDC 5.0 Hi-Res audio.",
+    "price": 9999
+  },
+  {
+    "name": "Apple Watch Series 10",
+    "category": "wearable",
+    "description": "Thinnest Apple Watch with Sleep Apnea detection.",
+    "price": 45900
+  },
+  {
+    "name": "Samsung Galaxy Watch 7",
+    "category": "wearable",
+    "description": "3nm Exynos-powered watch with Galaxy AI health coach.",
+    "price": 29999
+  },
+  {
+    "name": "Garmin Fenix 8",
+    "category": "wearable",
+    "description": "Ultimate multisport GPS watch with 29-day battery.",
+    "price": 89999
+  },
+  {
+    "name": "OnePlus Watch 3",
+    "category": "wearable",
+    "description": "100W charging smartwatch with Halo Light design.",
+    "price": 19999
+  },
+  {
+    "name": "Apple iPad Pro M4 11-inch",
+    "category": "tablet",
+    "description": "Thinnest Apple product ever with Ultra Retina XDR OLED display.",
+    "price": 99900
+  },
+  {
+    "name": "Samsung Galaxy Tab S10 Ultra",
+    "category": "tablet",
+    "description": "Largest Samsung tablet with Galaxy AI and bundled S Pen.",
+    "price": 109999
+  },
+  {
+    "name": "OnePlus Pad 2",
+    "category": "tablet",
+    "description": "Flagship-chip tablet with 144Hz 3K LTPO display.",
+    "price": 44999
+  },
+  {
+    "name": "Apple MagSafe Charger 15W",
+    "category": "accessory",
+    "description": "Perfectly aligned 15W magnetic wireless charger for iPhone.",
+    "price": 3900
+  },
+  {
+    "name": "Anker 240W GaN 4-Port Charger",
+    "category": "accessory",
+    "description": "Charge 4 devices at once — up to 240W total.",
+    "price": 5999
+  },
+  {
+    "name": "Samsung 45W Super Fast Charger",
+    "category": "accessory",
+    "description": "Official 45W Galaxy Super Fast Charger with cable.",
+    "price": 2999
+  },
+  {
+    "name": "Spigen Ultra Hybrid Case",
+    "category": "accessory",
+    "description": "Military-grade protection with crystal clear back panel.",
+    "price": 999
+  },
+  {
+    "name": "Sony Alpha A7 IV",
+    "category": "camera",
+    "description": "Ultimate hybrid full-frame mirrorless for creators.",
+    "price": 224990
+  },
+  {
+    "name": "GoPro Hero 13 Black",
+    "category": "camera",
+    "description": "Most capable GoPro with 5.3K video and HyperSmooth 6.0.",
+    "price": 44999
+  },
+  {
+    "name": "Apple MacBook Pro M4 Pro 14-inch",
+    "category": "laptop",
+    "description": "World's best laptop chip with 22-hour battery and Retina XDR.",
+    "price": 199900
+  },
+  {
+    "name": "Asus ROG Zephyrus G16",
+    "category": "laptop",
+    "description": "RTX 4090 gaming laptop with 240Hz OLED and liquid cooling.",
+    "price": 189999
+  },
+  {
+    "name": "Asus ROG Phone 9 Pro",
+    "category": "gaming",
+    "description": "Apex gaming phone with 185Hz display and Snapdragon 8 Elite.",
+    "price": 129999
+  },
+  {
+    "name": "Xiaomi Black Shark 6 Pro",
+    "category": "gaming",
+    "description": "Mechanical trigger gaming phone with 120W ultra-fast charge.",
+    "price": 69999
+  },
+  {
+    "name": "Google Nest Hub Max",
+    "category": "smarthome",
+    "description": "Ultimate smart home display with camera and ambient sensing.",
+    "price": 22999
+  },
+  {
+    "name": "Amazon Echo Show 10 3rd Gen",
+    "category": "smarthome",
+    "description": "Motorized rotating screen follows you during video calls.",
+    "price": 24999
+  },
+  {
+    "name": "Samsung Galaxy S24 FE",
+    "category": "mobile",
+    "description": "Fan Edition flagship with Galaxy AI and 50MP triple camera at an accessible price.",
+    "price": 54999
+  },
+  {
+    "name": "iPhone 15",
+    "category": "mobile",
+    "description": "USB-C iPhone with Dynamic Island, 48MP camera, and A16 Bionic chip.",
+    "price": 69999
+  },
+  {
+    "name": "OnePlus 12R",
+    "category": "mobile",
+    "description": "Snapdragon 8 Gen 2 powerhouse with 100W SUPERVOOC and OxygenOS.",
+    "price": 39999
+  },
+  {
+    "name": "Xiaomi Redmi Note 14 Pro+",
+    "category": "mobile",
+    "description": "200MP camera phone with Dimensity 8300 Ultra and 90W HyperCharge.",
+    "price": 31999
+  },
+  {
+    "name": "Google Pixel 9a",
+    "category": "mobile",
+    "description": "Affordable Pixel with Tensor G4, 7 years updates and Google AI features.",
+    "price": 52999
+  },
+  {
+    "name": "Motorola Razr 50 Ultra",
+    "category": "mobile",
+    "description": "Premium flip phone with 4\" cover display and Snapdragon 8s Gen 3.",
+    "price": 89999
+  },
+  {
+    "name": "Beats Studio Pro",
+    "category": "audio",
+    "description": "USB-C Beats with Apple & Android full feature support and 40h battery.",
+    "price": 32999
+  },
+  {
+    "name": "Sony WH-CH720N",
+    "category": "audio",
+    "description": "Lightweight ANC headphones with 35h battery and multipoint connection.",
+    "price": 10999
+  },
+  {
+    "name": "Jabra Evolve2 85",
+    "category": "audio",
+    "description": "Professional-grade ANC headset with 8-mic call clarity and 37h battery.",
+    "price": 34999
+  },
+  {
+    "name": "OnePlus Buds Pro 3",
+    "category": "tws",
+    "description": "Hi-Res Audio TWS with dual drivers and 49dB industry-leading ANC.",
+    "price": 11999
+  },
+  {
+    "name": "Bose QuietComfort Earbuds II",
+    "category": "tws",
+    "description": "World-class ANC earbuds with personalized fit and 6h battery.",
+    "price": 22999
+  },
+  {
+    "name": "Realme Buds Air 6 Pro",
+    "category": "tws",
+    "description": "Budget king TWS with 50dB ANC and LDAC Hi-Res audio under ₹5000.",
+    "price": 4999
+  },
+  {
+    "name": "Fitbit Charge 6",
+    "category": "wearable",
+    "description": "Google-integrated fitness tracker with ECG, GPS, and 7-day battery.",
+    "price": 14999
+  },
+  {
+    "name": "Amazfit GTR 4",
+    "category": "wearable",
+    "description": "14-day battery smartwatch with dual-band GPS and Zepp OS 2.0.",
+    "price": 12999
+  },
+  {
+    "name": "Noise ColorFit Ultra 3",
+    "category": "wearable",
+    "description": "1.96\" AMOLED budget smartwatch with BT calling and 7-day battery.",
+    "price": 4999
+  },
+  {
+    "name": "Samsung Galaxy Tab A9+",
+    "category": "tablet",
+    "description": "11\" entertainment tablet with Snapdragon 695 and quad Dolby Atmos speakers.",
+    "price": 29999
+  },
+  {
+    "name": "Xiaomi Pad 7",
+    "category": "tablet",
+    "description": "11.2\" 3K 144Hz tablet with Snapdragon 7+ Gen 3 and 8850mAh.",
+    "price": 34999
+  },
+  {
+    "name": "Belkin 3-in-1 MagSafe Charging Stand",
+    "category": "accessory",
+    "description": "Simultaneously charge iPhone, Apple Watch, and AirPods in one stand.",
+    "price": 8999
+  },
+  {
+    "name": "ESR Glass Screen Protector",
+    "category": "accessory",
+    "description": "9H tempered glass with easy auto-alignment frame for zero bubbles.",
+    "price": 599
+  },
+  {
+    "name": "Ugreen 100W USB-C Hub 7-in-1",
+    "category": "accessory",
+    "price": 71100430
+  },
+  {
+    "name": "MSRP Unit",
+    "category": "₹3,499",
+    "description": "JBL Flip 7 Bluetooth SpeakerFast Sync accessory JBL Flip 7 Bluetooth Speaker Portable IP67 speaker with Auracast multi-speaker sync and 12h battery.",
+    "price": 13999
+  },
+  {
+    "name": "Dell XPS 15 9530",
+    "category": "laptop",
+    "description": "Creator laptop with OLED 3.5K touch display and RTX 4070 GPU.",
+    "price": 169999
+  },
+  {
+    "name": "HP Spectre x360 14",
+    "category": "laptop",
+    "price": 212817
+  },
+  {
+    "name": "MSRP Unit",
+    "category": "₹1,49,999",
+    "description": "Lenovo ThinkPad X1 Carbon Gen 12Fast Sync laptop Lenovo ThinkPad X1 Carbon Gen 12 Ultra-light business laptop at 1.12kg with MIL-SPEC durability.",
+    "price": 159999
+  },
+  {
+    "name": "Canon EOS R6 Mark II",
+    "category": "camera",
+    "description": "Professional mirrorless with 40fps burst and 4K 60fps uncropped video.",
+    "price": 234990
+  },
+  {
+    "name": "DJI Osmo Pocket 3",
+    "category": "camera",
+    "description": "Pocket gimbal camera with 1-inch sensor, 4K 120fps and face tracking.",
+    "price": 54999
+  },
+  {
+    "name": "Sony PlayStation 5 Slim",
+    "category": "gaming",
+    "description": "Next-gen gaming console with 4K 120fps, ray tracing and 1TB SSD.",
+    "price": 49990
+  },
+  {
+    "name": "Xbox Series X",
+    "category": "gaming",
+    "description": "Most powerful Xbox with 12 TFLOPS GPU, 4K 120fps and Game Pass.",
+    "price": 52990
+  },
+  {
+    "name": "Nintendo Switch OLED",
+    "category": "gaming",
+    "description": "7\" OLED handheld console that docks to TV — play anywhere.",
+    "price": 29999
+  },
+  {
+    "name": "Apple HomePod 2nd Gen",
+    "category": "smarthome",
+    "description": "Incredible sound with S9 chip, Spatial Audio, and smart home hub.",
+    "price": 32900
+  },
+  {
+    "name": "Philips Hue Starter Kit",
+    "category": "smarthome",
+    "description": "4 smart color bulbs + Bridge — 16 million colors with app control.",
+    "price": 12999
+  }
+]
