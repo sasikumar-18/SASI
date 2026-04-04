@@ -51,6 +51,9 @@ export class Orders implements OnInit {
     private returnSteps = ['Return Requested', 'Return Approved', 'Refund Initiated', 'Refunded'];
 
     getTrackingSteps(status: string): string[] {
+        if (status === 'Cancelled') {
+            return ['Ordered', 'Cancelled'];
+        }
         if (this.returnSteps.includes(status) || status === 'Returned') {
             return this.returnSteps;
         }
@@ -71,6 +74,7 @@ export class Orders implements OnInit {
             case 'shipped': return 'text-amber-500 bg-amber-500/10';
             case 'delivered': return 'text-emerald-500 bg-emerald-500/10';
             case 'processing': return 'text-slate-500 bg-slate-500/10';
+            case 'cancelled': return 'text-red-500 bg-red-500/10';
 
             // Return/Refund Statuses
             case 'return requested': return 'text-orange-500 bg-orange-500/10';
@@ -94,6 +98,10 @@ export class Orders implements OnInit {
 
         // Return Flow
         const returnFlow = ['Return Requested', 'Return Approved', 'Refund Initiated', 'Refunded'];
+
+        if (currentStatus === 'Cancelled') {
+            return step === 'Ordered' || step === 'Cancelled';
+        }
 
         if (returnFlow.includes(currentStatus)) {
             // If we are in return flow, check against return steps
@@ -163,10 +171,10 @@ export class Orders implements OnInit {
 
     cancelOrder(orderId: string) {
         if (confirm('Are you sure you want to cancel this order?\n\nThis action is irreversible.')) {
-            const status = 'Refunded';
+            const status = 'Cancelled';
             this.localStatusOverrides[orderId] = status;
             this.orderService.updateOrderStatus(orderId, status).subscribe();
-            alert(`Order [${orderId.slice(-6).toUpperCase()}] has been cancelled.\n\nRefund initiated. Status updated to REFUNDED.`);
+            alert(`Order [${orderId.slice(-6).toUpperCase()}] has been cancelled.\n\nStatus updated to CANCELLED.`);
         }
     }
 
@@ -211,14 +219,14 @@ export class Orders implements OnInit {
             Order ID: ${order._id}
             Date: ${new Date(order.createdAt).toLocaleDateString()}
             
-            Customer: ${order.shippingAddress.name}
-            Address: ${order.shippingAddress.address}, ${order.shippingAddress.city}
+            Customer: ${order.shippingAddress?.name || 'Unknown User'}
+            Address: ${order.shippingAddress?.address || 'Unknown Address'}, ${order.shippingAddress?.city || 'Unknown City'}
             
             Items:
             ${order.items.map((i: any) => `- ${i.name} (x${i.quantity}): ₹${i.price}`).join('\n')}
             
             Total: ₹${order.totalAmount}
-            Payment: ${order.paymentMethod}
+            Payment: ${order.paymentMethod || 'Fallback Payment'}
             
             THANK YOU FOR CHOOSING THE NEXUS.
         `;

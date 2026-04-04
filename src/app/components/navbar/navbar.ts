@@ -54,9 +54,22 @@ export class Navbar {
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
     if (this.showNotifications) {
-      // Keep unread status until explicitly clicked or "Mark all read" is used? 
-      // Usually simplistic apps mark as read on open, but let's keep them unread for now.
+      this.isProfileOpen = false;
     }
+  }
+
+  isProfileOpen = false;
+
+  toggleProfile() {
+    this.isProfileOpen = !this.isProfileOpen;
+    if (this.isProfileOpen) {
+      this.showNotifications = false;
+    }
+  }
+
+  logoutAndClose() {
+    this.isProfileOpen = false;
+    this.authService.logout();
   }
 
   private ngZone = inject(NgZone);

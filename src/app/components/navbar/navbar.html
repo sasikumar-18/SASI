@@ -243,9 +243,10 @@
 
         <!-- Authentication -->
         @if (authService.user$ | async; as user) {
-        <div class="relative group">
-          <button
-            class="flex items-center space-x-4 p-2 bg-bg-secondary border border-glass-border rounded-2xl hover:bg-white/10 dark:hover:bg-white/5 transition-all shadow-xl">
+        <div class="relative z-40">
+          <button (click)="toggleProfile()"
+            class="flex items-center space-x-4 p-2 bg-bg-secondary border border-glass-border rounded-2xl hover:bg-white/10 dark:hover:bg-white/5 transition-all shadow-xl"
+            [class.bg-white/10]="isProfileOpen">
             <div
               class="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center text-white font-black shadow-lg">
               {{ (user.displayName || user.email || 'U').charAt(0).toUpperCase() }}
@@ -257,31 +258,55 @@
           </button>
 
           <!-- Dropdown -->
+          @if (isProfileOpen) {
           <div
-            class="absolute right-0 mt-4 w-72 glass rounded-[2.5rem] shadow-2xl py-6 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 transform translate-y-4 group-hover:translate-y-0 border-glass-border shadow-red-500/10">
-            <div class="px-8 py-5 border-b border-glass-border mb-3">
-              <p class="text-[9px] font-black text-muted uppercase tracking-[0.4em] mb-1">{{ 'NAV_ACC' |
-                translate }}</p>
-              <p class="text-sm font-black text-main truncate italic">MG-{{ user.uid.slice(0, 12) }}</p>
+            class="absolute right-0 mt-4 w-80 glass rounded-[2.5rem] shadow-2xl py-6 border border-glass-border shadow-red-500/10 animate-reveal z-50">
+            
+            <!-- User Info Block -->
+            <div class="px-8 py-5 border-b border-glass-border mb-3 bg-white/5">
+              <p class="text-[9px] font-black text-muted uppercase tracking-[0.4em] mb-4">{{ 'NAV_ACC' | translate }}</p>
+              
+              <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 rounded-xl gradient-bg flex items-center justify-center text-white font-black shadow-lg text-xl flex-shrink-0">
+                  {{ (user.displayName || user.email || 'U').charAt(0).toUpperCase() }}
+                </div>
+                <div class="flex-1 min-w-0 overflow-hidden">
+                  <p class="text-sm font-black text-main truncate">{{ user.displayName || 'User' }}</p>
+                  <p class="text-[10px] font-medium text-muted truncate mt-0.5">{{ user.email }}</p>
+                </div>
+              </div>
+              
+              <div class="flex items-center justify-between mt-4">
+                <span class="text-[9px] font-black text-main uppercase tracking-widest px-3 py-1.5 rounded-lg bg-black/20 border border-glass-border">
+                  ROLE: <span class="text-red-500">{{ user.role || 'USER' }}</span>
+                </span>
+                <span class="text-[9px] font-black text-muted truncate italic opacity-50 text-wrap ml-2">UID: {{ user.uid.slice(0, 8) }}</span>
+              </div>
             </div>
-            <a routerLink="/nexus-card"
+
+            <!-- Links -->
+            <a routerLink="/nexus-card" (click)="isProfileOpen = false"
               class="flex items-center px-8 py-4 hover:bg-black/5 dark:hover:bg-white/5 transition-all group">
               <i class="fas fa-credit-card mr-5 text-muted group-hover:text-red-500 transition-colors"></i>
               <span class="text-[10px] font-black uppercase tracking-[0.3em] text-main">Nexus Card</span>
             </a>
-            <a routerLink="/orders"
+            <a routerLink="/orders" (click)="isProfileOpen = false"
               class="flex items-center px-8 py-4 hover:bg-black/5 dark:hover:bg-white/5 transition-all group">
               <i class="fas fa-box-open mr-5 text-muted group-hover:text-red-500 transition-colors"></i>
               <span class="text-[10px] font-black uppercase tracking-[0.3em] text-main">{{ 'NAV_ORDERS' | translate
                 }}</span>
             </a>
             <hr class="my-3 border-glass-border mx-6">
-            <button (click)="authService.logout()"
+            <button (click)="logoutAndClose()"
               class="w-full flex items-center px-8 py-4 text-red-500 hover:bg-red-500/10 transition-all group">
               <i class="fas fa-sign-out-alt mr-5"></i>
               <span class="text-[10px] font-black uppercase tracking-[0.4em]">{{ 'NAV_LOGOUT' | translate }}</span>
             </button>
           </div>
+
+          <!-- Backdrop -->
+          <div class="fixed inset-0 z-10" (click)="toggleProfile()"></div>
+          }
         </div>
         } @else {
         <button routerLink="/login"

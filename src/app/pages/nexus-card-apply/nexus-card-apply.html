@@ -35,7 +35,7 @@
                             class="w-10 h-10 bg-indigo-500/10 text-indigo-500 rounded-xl flex items-center justify-center font-black">
                             03</div>
                         <span class="text-sm font-bold text-muted uppercase tracking-widest">Credit Limits up to
-                            â‚¹2,00,000</span>
+                            ₹2,00,000</span>
                     </li>
                 </ul>
             </div>
@@ -74,7 +74,7 @@
 
                 <div class="space-y-4">
                     <label class="text-[10px] font-black text-muted uppercase tracking-[0.4em] ml-2">Annual Yield
-                        (â‚¹)</label>
+                        (₹)</label>
                     <input type="number" [(ngModel)]="formData.income" name="income" placeholder="500000" required
                         class="w-full px-8 py-6 bg-bg-secondary border border-glass-border rounded-3xl outline-none focus:border-indigo-500 transition-all text-main font-black uppercase tracking-widest">
                 </div>
@@ -130,7 +130,7 @@
         </h2>
         <div class="mt-12 mb-16 space-y-4">
             <p class="text-[10px] font-black text-muted uppercase tracking-[0.5em]">Approved Limit</p>
-            <p class="text-7xl font-black text-main italic">â‚¹{{ cardService.application().creditLimit.toLocaleString()
+            <p class="text-7xl font-black text-main italic">₹{{ cardService.application().creditLimit.toLocaleString()
                 }}</p>
         </div>
         <div class="grid md:grid-cols-2 gap-6 text-left mb-16 max-w-sm mx-auto">
