@@ -113,16 +113,37 @@
                             Grade</span>
                         <div class="flex justify-end gap-2">
                             @for (star of [5,4,3,2,1]; track star) {
-                            <button (click)="minRating.set(star)" [class.bg-red-600]="minRating() === star"
+                            <button (click)="setRating(star)" [class.bg-red-600]="minRating() === star"
                                 [class.text-white]="minRating() === star" [class.border-red-600]="minRating() === star"
                                 class="w-10 h-10 rounded-xl border border-glass-border flex items-center justify-center hover:bg-red-600/20 transition-all font-bold text-sm">
                                 {{star}}+
                             </button>
                             }
-                            <button (click)="minRating.set(0)" [class.bg-main]="minRating() === 0"
+                            <button (click)="setRating(0)" [class.bg-main]="minRating() === 0"
                                 [class.text-bg-main]="minRating() === 0"
                                 class="px-4 h-10 rounded-xl border border-glass-border flex items-center justify-center hover:bg-main/20 transition-all font-bold text-[10px] uppercase">
                                 All
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Brand Filter -->
+                    <div class="col-span-1 md:col-span-2 pt-8 border-t border-glass-border">
+                        <span class="text-[10px] font-black uppercase tracking-[0.3em] text-muted block mb-6">Manufacturer
+                            Signature</span>
+                        <div class="flex flex-wrap gap-4">
+                            @for (brand of ['Apple', 'Samsung', 'Google', 'OnePlus', 'Xiaomi', 'Nothing', 'Sony', 'Asus', 'Motorola']; track brand) {
+                            <button (click)="setBrand(selectedBrand() === brand ? '' : brand)"
+                                [class.bg-red-600]="selectedBrand() === brand"
+                                [class.text-white]="selectedBrand() === brand"
+                                [class.border-red-600]="selectedBrand() === brand"
+                                class="px-6 py-3 rounded-xl border border-glass-border text-[10px] font-black uppercase tracking-widest hover:border-red-600/50 transition-all">
+                                {{brand}}
+                            </button>
+                            }
+                            <button (click)="resetFilters()"
+                                class="px-6 py-3 rounded-xl border border-red-600/20 text-red-500 text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all ml-auto">
+                                Reset Parameters
                             </button>
                         </div>
                     </div>

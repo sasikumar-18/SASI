@@ -18,6 +18,8 @@ export const routes: Routes = [
     { path: 'orders', loadComponent: () => import('./pages/orders/orders').then(m => m.Orders) },
     { path: 'wishlist', loadComponent: () => import('./pages/wishlist/wishlist').then(m => m.Wishlist) },
     { path: 'compare', loadComponent: () => import('./pages/compare/compare').then(m => m.Compare) },
+    { path: 'support', loadComponent: () => import('./pages/support/support').then(m => m.Support) },
     { path: 'nexus-card', loadComponent: () => import('./pages/nexus-card-apply/nexus-card-apply').then(m => m.NexusCardApply) },
+    { path: 'admin', loadComponent: () => import('./pages/admin/admin').then(m => m.Admin) },
     { path: '**', redirectTo: '' }
 ];

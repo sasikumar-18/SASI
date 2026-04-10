@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom, LOCALE_ID, DEFAULT_CURRENCY_CODE } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, LOCALE_ID, DEFAULT_CURRENCY_CODE, provideZonelessChangeDetection } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
@@ -15,6 +15,7 @@ registerLocaleData(localeIn);
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideZonelessChangeDetection(),
     provideHttpClient(),
     provideRouter(routes),
     provideFirebaseApp(() => initializeApp(environment.firebase)),

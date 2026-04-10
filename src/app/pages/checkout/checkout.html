@@ -10,337 +10,348 @@
             </div>
 
             <form (ngSubmit)="onPlaceOrder()" class="space-y-10">
-                <!-- Address Selection -->
-                <div class="glass p-10 rounded-[3rem] space-y-8 border-glass-border shadow-xl">
-                    <div class="flex justify-between items-center border-b border-glass-border pb-6">
-                        <h3 class="text-xl font-black text-main uppercase italic flex items-center">
-                            <i class="fas fa-map-marked-alt mr-4 text-red-600"></i>
-                            1. Delivery Coordinates
-                        </h3>
-                        @if (!isAddressFormMode) {
-                        <button type="button" (click)="toggleAddressForm()"
-                            class="text-[10px] font-black uppercase tracking-widest text-red-500 hover:text-red-400 border border-red-500/30 px-4 py-2 rounded-xl">
-                            + New Location
-                        </button>
-                        } @else {
-                        <button type="button" (click)="toggleAddressForm()"
-                            class="text-[10px] font-black uppercase tracking-widest text-muted hover:text-main">
-                            Cancel
-                        </button>
-                        }
-                    </div>
-
-                    @if (!isAddressFormMode) {
-                    <div class="grid md:grid-cols-2 gap-4">
-                        @for (addr of addressService.addresses(); track addr.id) {
-                        <div (click)="selectAddress(addr)"
-                            class="cursor-pointer p-6 rounded-2xl border-2 transition-all relative group"
-                            [class.border-red-500]="selectedAddressId === addr.id"
-                            [class.bg-red-500-5]="selectedAddressId === addr.id"
-                            [class.border-glass-border]="selectedAddressId !== addr.id"
-                            [class.hover-border-red-500-50]="selectedAddressId !== addr.id">
-
-                            <div class="flex justify-between items-start mb-2">
-                                <span
-                                    class="text-[9px] font-black uppercase tracking-widest bg-white/10 px-2 py-1 rounded text-muted">{{
-                                    addr.label }}</span>
-                                <div class="flex space-x-2">
-                                    @if (!addr.isDefault) {
-                                        <button (click)="makeDefaultAddress($event, addr.id)" class="text-[9px] font-black uppercase tracking-widest text-indigo-500 hover:text-indigo-400" title="Make Default">
-                                            <i class="far fa-star"></i>
-                                        </button>
-                                    } @else {
-                                        <i class="fas fa-star text-amber-500" title="Default Coordinate"></i>
-                                    }
-                                </div>
-                            </div>
-                            <h4 class="font-bold text-main uppercase">{{ addr.fullName }}</h4>
-                            <p class="text-sm text-muted mt-1 leading-relaxed">
-                                {{ addr.street }}<br>
-                                {{ addr.city }}, {{ addr.state }} {{ addr.zip }}
-                            </p>
-                            <div class="flex justify-between items-end mt-4">
-                                <p class="text-[10px] font-bold text-muted"><i class="fas fa-phone mr-1"></i> {{ addr.phone }}</p>
-                                <div class="flex space-x-3 pointer-events-auto">
-                                    <button type="button" (click)="$event.stopPropagation(); toggleAddressForm(addr)" class="text-xs text-blue-500 hover:text-blue-400"><i class="fas fa-edit"></i></button>
-                                    <button type="button" (click)="deleteAddress($event, addr.id)" class="text-xs text-red-500 hover:text-red-400"><i class="fas fa-trash-alt"></i></button>
-                                </div>
-                            </div>
-                            @if (selectedAddressId === addr.id) {
-                                <div class="absolute -top-3 -right-3 w-6 h-6 bg-red-600 rounded-full flex items-center justify-center text-white text-[10px] shadow-lg shadow-red-600/50">
-                                    <i class="fas fa-check"></i>
-                                </div>
+                
+                @if (checkoutStep === 1) {
+                <!-- Phase 1: Delivery Details -->
+                <div class="space-y-10 animate-reveal">
+                    <!-- Address Selection -->
+                    <div class="glass p-10 rounded-[3rem] space-y-8 border-glass-border shadow-xl">
+                        <div class="flex justify-between items-center border-b border-glass-border pb-6">
+                            <h3 class="text-xl font-black text-main uppercase italic flex items-center">
+                                <i class="fas fa-map-marked-alt mr-4 text-red-600"></i>
+                                1. Delivery Logistics
+                            </h3>
+                            @if (!isAddressFormMode) {
+                            <button type="button" (click)="toggleAddressForm()"
+                                class="text-[10px] font-black uppercase tracking-widest text-red-500 hover:text-red-400 border border-red-500/30 px-4 py-2 rounded-xl">
+                                + New Location
+                            </button>
+                            } @else {
+                            <button type="button" (click)="toggleAddressForm()"
+                                class="text-[10px] font-black uppercase tracking-widest text-muted hover:text-main">
+                                Cancel
+                            </button>
                             }
                         </div>
-                        }
-                    </div>
-                    } @else {
-                    <!-- New Address Form -->
-                    <div class="space-y-6 animate-reveal">
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div class="space-y-2">
-                                <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Full
-                                    Name</label>
-                                <input type="text" [(ngModel)]="address.fullName" name="name" placeholder="Identifier"
-                                    required
-                                    class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold">
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Location
-                                    Label</label>
-                                <input type="text" [(ngModel)]="address.label" name="label"
-                                    placeholder="e.g. Home, Base 1"
-                                    class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold">
-                            </div>
-                        </div>
 
-                        <div class="space-y-2">
-                            <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Street
-                                Address</label>
-                            <input type="text" [(ngModel)]="address.street" name="street"
-                                placeholder="Physical Coordinates" required
-                                class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold">
-                        </div>
+                        @if (!isAddressFormMode) {
+                        <div class="grid md:grid-cols-2 gap-4">
+                            @for (addr of addressService.addresses(); track addr.id) {
+                            <div (click)="selectAddress(addr)"
+                                class="cursor-pointer p-6 rounded-2xl border-2 transition-all relative group"
+                                [class.border-red-500]="selectedAddressId === addr.id"
+                                [class.bg-red-500-5]="selectedAddressId === addr.id"
+                                [class.border-glass-border]="selectedAddressId !== addr.id"
+                                [class.hover-border-red-500-50]="selectedAddressId !== addr.id">
 
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div class="space-y-2">
-                                <label
-                                    class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">City</label>
-                                <input type="text" [(ngModel)]="address.city" name="city" placeholder="Sector" required
-                                    class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span
+                                        class="text-[9px] font-black uppercase tracking-widest bg-white/10 px-2 py-1 rounded text-muted">{{
+                                        addr.label }}</span>
+                                    <div class="flex space-x-2">
+                                        @if (!addr.isDefault) {
+                                            <button (click)="makeDefaultAddress($event, addr.id)" class="text-[9px] font-black uppercase tracking-widest text-indigo-500 hover:text-indigo-400" title="Make Default">
+                                                <i class="far fa-star"></i>
+                                            </button>
+                                        } @else {
+                                            <i class="fas fa-star text-amber-500" title="Default Coordinate"></i>
+                                        }
+                                    </div>
+                                </div>
+                                <h4 class="font-bold text-main uppercase">{{ addr.fullName }}</h4>
+                                <p class="text-sm text-muted mt-1 leading-relaxed">
+                                    {{ addr.street }}<br>
+                                    {{ addr.city }}, {{ addr.state }} {{ addr.zip }}
+                                </p>
+                                <div class="flex justify-between items-end mt-4">
+                                    <p class="text-[10px] font-bold text-muted"><i class="fas fa-phone mr-1"></i> {{ addr.phone }}</p>
+                                    <div class="flex space-x-3 pointer-events-auto">
+                                        <button type="button" (click)="$event.stopPropagation(); toggleAddressForm(addr)" class="text-xs text-blue-500 hover:text-blue-400"><i class="fas fa-edit"></i></button>
+                                        <button type="button" (click)="deleteAddress($event, addr.id)" class="text-xs text-red-500 hover:text-red-400"><i class="fas fa-trash-alt"></i></button>
+                                    </div>
+                                </div>
+                                @if (selectedAddressId === addr.id) {
+                                    <div class="absolute -top-3 -right-3 w-6 h-6 bg-red-600 rounded-full flex items-center justify-center text-white text-[10px] shadow-lg shadow-red-600/50">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                }
                             </div>
-                            <div class="space-y-2">
-                                <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">State /
-                                    Territory</label>
-                                <input type="text" [(ngModel)]="address.state" name="state" placeholder="Region"
-                                    required
-                                    class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold">
-                            </div>
-                            <div class="space-y-2">
-                                <label
-                                    class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Zip</label>
-                                <input type="text" [(ngModel)]="address.zip" name="zip" placeholder="Code" required
-                                    class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold">
-                            </div>
-                            <div class="space-y-2">
-                                <label
-                                    class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Phone</label>
-                                <input type="text" [(ngModel)]="address.phone" name="phone" placeholder="Contact"
-                                    required
-                                    class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold">
-                            </div>
-                        </div>
-
-                        <button type="button" (click)="saveAddress()"
-                            [disabled]="!address.fullName || !address.street || !address.city || !address.zip"
-                            class="w-full py-4 bg-white/5 border border-glass-border hover:bg-white/10 text-main rounded-2xl font-black text-xs uppercase tracking-[0.3em] transition-all flex items-center justify-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed">
-                            <i class="fas fa-save text-red-500"></i>
-                            <span>Save Location</span>
-                        </button>
-                    </div>
-                    }
-                </div>
-
-                <!-- Delivery Strategy Selection -->
-                <div class="glass p-10 rounded-[3rem] space-y-8 border-glass-border shadow-xl">
-                    <h3 class="text-xl font-black text-main uppercase italic border-b border-glass-border pb-6 flex items-center">
-                        <i class="fas fa-shipping-fast mr-4 text-red-600"></i>
-                        2. Delivery Strategy
-                    </h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div (click)="deliveryOption = 'standard'" 
-                             [class.border-red-600]="deliveryOption === 'standard'"
-                             [class.bg-red-600\/5]="deliveryOption === 'standard'"
-                             class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center hover:bg-black/5 dark:hover:bg-white/5 space-y-3">
-                            <i class="fas fa-truck text-2xl text-muted group-hover:text-main"></i>
-                            <span class="text-[9px] font-black uppercase text-center w-full">Standard</span>
-                            <span class="text-[9px] font-black text-emerald-500 uppercase text-center">Free (3-5 Days)</span>
-                        </div>
-                        <div (click)="deliveryOption = 'fast'" 
-                             [class.border-red-600]="deliveryOption === 'fast'"
-                             [class.bg-red-600\/5]="deliveryOption === 'fast'"
-                             class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center hover:bg-black/5 dark:hover:bg-white/5 space-y-3">
-                            <i class="fas fa-plane text-2xl text-muted group-hover:text-main"></i>
-                            <span class="text-[9px] font-black uppercase text-center w-full">Express</span>
-                            <span class="text-[9px] font-black text-main uppercase text-center">+ ₹200 (1-2 Days)</span>
-                        </div>
-                        <div (click)="deliveryOption = 'sameday'" 
-                             [class.border-red-600]="deliveryOption === 'sameday'"
-                             [class.bg-red-600\/5]="deliveryOption === 'sameday'"
-                             class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center hover:bg-black/5 dark:hover:bg-white/5 space-y-3">
-                            <i class="fas fa-bolt text-2xl text-muted group-hover:text-main"></i>
-                            <span class="text-[9px] font-black uppercase text-center w-full">Same-Day Rush</span>
-                            <span class="text-[9px] font-black text-main uppercase text-center">+ ₹500 (Today)</span>
-                        </div>
-                    </div>
-
-                    @if (deliveryOption !== 'sameday') {
-                        <div class="grid md:grid-cols-2 gap-6 animate-reveal">
-                            <div class="space-y-2">
-                                <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Preferred Date</label>
-                                <input type="date" [(ngModel)]="deliveryDate" name="deliveryDate" [min]="minDate" required 
-                                       class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold">
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Time Window</label>
-                                <select [(ngModel)]="deliveryTimeSlot" name="deliveryTimeSlot" required
-                                        class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold">
-                                    <option value="" disabled>Select Time</option>
-                                    <option value="09:00 AM - 12:00 PM">09:00 AM - 12:00 PM</option>
-                                    <option value="12:00 PM - 04:00 PM">12:00 PM - 04:00 PM</option>
-                                    <option value="04:00 PM - 08:00 PM">04:00 PM - 08:00 PM</option>
-                                </select>
-                            </div>
-                        </div>
-                    } @else {
-                        <div class="bg-emerald-500/10 border border-emerald-500/30 p-6 rounded-2xl animate-reveal flex items-start space-x-4">
-                            <i class="fas fa-check-circle text-emerald-500 mt-1"></i>
-                            <div>
-                                <h4 class="text-sm font-black text-emerald-500 uppercase tracking-widest mb-1">Same-Day Confirmed</h4>
-                                <p class="text-xs font-bold text-emerald-500/70">Your order will be dispatched immediately and pushed to the top of our priority queue.</p>
-                            </div>
-                        </div>
-                    }
-                </div>
-
-                <!-- Payment Selection -->
-                <div class="glass p-10 rounded-[3rem] space-y-8 border-glass-border shadow-xl">
-                    <h3
-                        class="text-xl font-black text-main uppercase italic border-b border-glass-border pb-6 flex items-center">
-                        <i class="fas fa-credit-card mr-4 text-red-600"></i>
-                        3. Credit & Payment
-                    </h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div (click)="paymentMethod = 'COD'" [class.border-red-600]="paymentMethod === 'COD'"
-                            [class.bg-red-600\/5]="paymentMethod === 'COD'"
-                            class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center hover:bg-black/5 dark:hover:bg-white/5 space-y-3">
-                            <i class="fas fa-truck text-2xl text-muted group-hover:text-main"></i>
-                            <span class="text-[9px] font-black uppercase text-center">Cash on Delivery</span>
-                        </div>
-                        <div (click)="paymentMethod = 'UPI'" [class.border-red-600]="paymentMethod === 'UPI'"
-                            [class.bg-red-600\/5]="paymentMethod === 'UPI'"
-                            class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center hover:bg-black/5 dark:hover:bg-white/5 space-y-3">
-                            <i class="fas fa-mobile-alt text-2xl text-muted group-hover:text-main"></i>
-                            <span class="text-[9px] font-black uppercase text-center">UPI Transfer</span>
-                        </div>
-                        <div (click)="paymentMethod = 'Card'" [class.border-red-600]="paymentMethod === 'Card'"
-                            [class.bg-red-600\/5]="paymentMethod === 'Card'"
-                            class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center hover:bg-black/5 dark:hover:bg-white/5 space-y-3">
-                            <i class="fas fa-wallet text-2xl text-muted group-hover:text-main"></i>
-                            <span class="text-[9px] font-black uppercase text-center">Standard Card</span>
-                        </div>
-
-                        <!-- Nexus EMI Option -->
-                        @if (nexusCardService.isApproved()) {
-                        <div (click)="paymentMethod = 'NexusEMI'"
-                            [class.border-indigo-600]="paymentMethod === 'NexusEMI'"
-                            [class.bg-indigo-600\/5]="paymentMethod === 'NexusEMI'"
-                            class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center hover:bg-indigo-500/5 space-y-3">
-                            <i class="fas fa-microchip text-2xl text-indigo-500 group-hover:text-indigo-400"></i>
-                            <span class="text-[9px] font-black uppercase text-center text-indigo-500">Nexus EMI</span>
+                            }
                         </div>
                         } @else {
-                        <div routerLink="/nexus-card"
-                            class="cursor-pointer p-6 border-2 border-dashed border-glass-border rounded-2xl transition-all flex flex-col items-center hover:bg-black/5 dark:hover:bg-white/5 space-y-3">
-                            <i class="fas fa-plus-circle text-2xl text-muted"></i>
-                            <span class="text-[9px] font-black uppercase text-center text-muted">Apply EMI</span>
+                        <!-- New Address Form -->
+                        <div class="space-y-6 animate-reveal">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Full Name</label>
+                                    <input type="text" [(ngModel)]="address.fullName" name="name" required
+                                        class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Label</label>
+                                    <input type="text" [(ngModel)]="address.label" name="label"
+                                        class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Street</label>
+                                <input type="text" [(ngModel)]="address.street" name="street" required
+                                    class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold">
+                            </div>
+                            <div class="grid md:grid-cols-3 gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">City</label>
+                                    <input type="text" [(ngModel)]="address.city" name="city" required
+                                        class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Zip</label>
+                                    <input type="text" [(ngModel)]="address.zip" name="zip" required
+                                        class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Phone</label>
+                                    <input type="text" [(ngModel)]="address.phone" name="phone" required
+                                        class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold">
+                                </div>
+                            </div>
+                            <button type="button" (click)="saveAddress()"
+                                class="w-full py-4 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest">Save Location Profile</button>
                         </div>
                         }
                     </div>
-                </div>
 
-                <!-- EMI Plan Selection -->
-                @if (paymentMethod === 'NexusEMI') {
-                <div
-                    class="glass p-10 rounded-[3rem] space-y-8 border-glass-border shadow-xl animate-reveal-up border-indigo-500/30">
-                    <h3
-                        class="text-xl font-black text-main uppercase italic border-b border-glass-border pb-6 flex items-center">
-                        <i class="fas fa-calendar-alt mr-4 text-indigo-500"></i>
-                        4. Select EMI Tenure
-                    </h3>
-                    <div class="grid grid-cols-3 gap-4">
-                        @for (month of [3, 6, 12]; track month) {
-                        <div (click)="emiPlan = month" [class.border-indigo-600]="emiPlan === month"
-                            [class.bg-indigo-600\/5]="emiPlan === month"
-                            class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center hover:bg-indigo-500/5">
-                            <span class="text-2xl font-black text-main">{{ month }}</span>
-                            <span class="text-[8px] font-black uppercase text-muted">Months</span>
-                            <p class="text-[10px] font-black text-indigo-500 mt-2">₹{{
-                                nexusCardService.calculateEMI(cartService.totalPrice(), month).toLocaleString() }}/mo
-                            </p>
+                    <!-- Strategy Selection -->
+                    <div class="glass p-10 rounded-[3rem] space-y-8 border-glass-border shadow-xl">
+                        <h3 class="text-xl font-black text-main uppercase italic border-b border-glass-border pb-6 flex items-center">
+                            <i class="fas fa-shipping-fast mr-4 text-red-600"></i>
+                            2. Delivery Strategy
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div (click)="deliveryOption = 'standard'" 
+                                 [class.border-red-600]="deliveryOption === 'standard'"
+                                 class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center space-y-3">
+                                <i class="fas fa-truck text-2xl text-muted"></i>
+                                <span class="text-[9px] font-black uppercase">Standard</span>
+                                <span class="text-[9px] font-black text-emerald-500 uppercase">Free</span>
+                            </div>
+                            <div (click)="deliveryOption = 'fast'" 
+                                 [class.border-red-600]="deliveryOption === 'fast'"
+                                 class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center space-y-3">
+                                <i class="fas fa-plane text-2xl text-muted"></i>
+                                <span class="text-[9px] font-black uppercase">Express</span>
+                                <span class="text-[9px] font-black text-main uppercase">+₹200</span>
+                            </div>
+                            <div (click)="deliveryOption = 'sameday'" 
+                                 [class.border-red-600]="deliveryOption === 'sameday'"
+                                 class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center space-y-3">
+                                <i class="fas fa-bolt text-2xl text-muted"></i>
+                                <span class="text-[9px] font-black uppercase">Same-Day</span>
+                                <span class="text-[9px] font-black text-main uppercase">+₹500</span>
+                            </div>
                         </div>
+                    </div>
+
+                    <!-- Proceed Logic -->
+                    <button type="button" (click)="proceedToPayment()" 
+                        class="w-full py-8 bg-black text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.4em] shadow-2xl transition-all hover:scale-105 active:scale-95 flex items-center justify-center space-x-6">
+                        <span>PROCEED TO PAYMENT</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                }
+
+                @if (checkoutStep === 2) {
+                <!-- Phase 2: Financial Authentication -->
+                <div class="space-y-10 animate-reveal-up">
+                    <div (click)="checkoutStep = 1" class="flex items-center space-x-4 cursor-pointer group">
+                        <div class="w-10 h-10 rounded-full border border-glass-border flex items-center justify-center text-muted group-hover:text-red-500 group-hover:border-red-500 transition-all">
+                            <i class="fas fa-arrow-left"></i>
+                        </div>
+                        <span class="text-[10px] font-black uppercase text-red-500 tracking-widest">Back to Logistics</span>
+                    </div>
+
+                    <!-- Payment Toggles -->
+                    <div class="glass p-10 rounded-[3rem] space-y-8 border-glass-border shadow-xl">
+                        <h3 class="text-xl font-black text-main uppercase italic border-b border-glass-border pb-6 flex items-center">
+                            <i class="fas fa-lock mr-4 text-red-600"></i>
+                            3. Select Protocol
+                        </h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div (click)="paymentMethod = 'COD'" [class.border-red-600]="paymentMethod === 'COD'"
+                                class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center space-y-3">
+                                <i class="fas fa-truck text-2xl text-muted"></i>
+                                <span class="text-[9px] font-black uppercase text-center">Cash on Delivery</span>
+                            </div>
+                            <div (click)="paymentMethod = 'UPI'" [class.border-red-600]="paymentMethod === 'UPI'"
+                                class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center space-y-3">
+                                <i class="fas fa-qrcode text-2xl text-muted"></i>
+                                <span class="text-[9px] font-black uppercase text-center">UPI Transfer</span>
+                            </div>
+                            <div (click)="paymentMethod = 'Card'" [class.border-red-600]="paymentMethod === 'Card'"
+                                class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center space-y-3">
+                                <i class="fas fa-credit-card text-2xl text-muted"></i>
+                                <span class="text-[9px] font-black uppercase text-center">Standard Card</span>
+                            </div>
+                            <div (click)="paymentMethod = 'NexusEMI'" [class.border-red-600]="paymentMethod === 'NexusEMI'"
+                                class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center space-y-3">
+                                <i class="fas fa-microchip text-2xl text-muted"></i>
+                                <span class="text-[9px] font-black uppercase text-center">Nexus EMI</span>
+                            </div>
+                            <!-- Wallet Method -->
+                            <div (click)="paymentMethod = 'Wallet'" 
+                                [class.border-red-600]="paymentMethod === 'Wallet'"
+                                [class.bg-red-500-5]="paymentMethod === 'Wallet'"
+                                class="cursor-pointer p-6 border-2 border-glass-border rounded-2xl transition-all flex flex-col items-center space-y-3 group">
+                                <i class="fas fa-wallet text-2xl text-muted group-hover:text-red-500 transition-colors"></i>
+                                <div class="text-center">
+                                    <p class="text-[9px] font-black uppercase">Nexus Wallet</p>
+                                    <p class="text-[7px] font-bold text-muted uppercase tracking-widest mt-1">Bal: {{ authService.userProfile()?.walletBalance | currency:'INR' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- UPI App Interface -->
+                    @if (paymentMethod === 'UPI') {
+                    <div class="glass p-10 rounded-[3rem] space-y-10 border-glass-border shadow-xl animate-reveal">
+                        <div class="space-y-4">
+                            <h3 class="text-xl font-black text-main uppercase italic border-b border-glass-border pb-6 flex items-center">
+                                <i class="fas fa-qrcode mr-4 text-red-600"></i>
+                                4. UPI Authentication
+                            </h3>
+                        </div>
+
+                        <!-- Option A: Manual Entry -->
+                        <div class="space-y-6">
+                            <label class="text-[10px] font-black uppercase tracking-[0.3em] text-muted ml-2">Manual Protocol</label>
+                            <div class="relative group">
+                                <div class="absolute left-6 top-1/2 -translate-y-1/2 text-muted group-focus-within:text-red-500 transition-colors">
+                                    <i class="fas fa-at"></i>
+                                </div>
+                                <input type="text" [(ngModel)]="upiId" name="upiId" placeholder="enter-your-id@upi"
+                                    class="w-full pl-14 pr-6 py-6 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold font-mono tracking-widest shadow-inner">
+                            </div>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="flex items-center space-x-6">
+                            <div class="flex-grow border-t border-glass-border border-dashed"></div>
+                            <span class="text-[9px] font-black uppercase text-muted tracking-widest px-4 py-1 glass rounded-full">OR CONNECT VIA APP</span>
+                            <div class="flex-grow border-t border-glass-border border-dashed"></div>
+                        </div>
+
+                        <!-- Option B: App Selection -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            <!-- Google Pay -->
+                            <div (click)="setUPIApp('gpay')" 
+                                [class.border-blue-600]="upiApp === 'gpay'"
+                                [class.bg-blue-600-5]="upiApp === 'gpay'"
+                                class="cursor-pointer p-6 border-2 border-glass-border rounded-3xl flex flex-col items-center justify-center space-y-3 hover:border-blue-300 transition-all shadow-sm group">
+                                <div class="w-12 h-12 rounded-2xl bg-black text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                    <i class="fab fa-google-pay text-3xl"></i>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <span class="text-[10px] font-black text-slate-800 uppercase tracking-widest">G-Pay 📱</span>
+                                </div>
+                            </div>
+
+                            <!-- PhonePe -->
+                            <div (click)="setUPIApp('phonepe')" 
+                                [class.border-purple-600]="upiApp === 'phonepe'"
+                                [class.bg-purple-600-5]="upiApp === 'phonepe'"
+                                class="cursor-pointer p-6 border-2 border-glass-border rounded-3xl flex flex-col items-center justify-center space-y-3 hover:border-purple-300 transition-all shadow-sm group">
+                                <div class="w-12 h-12 rounded-2xl bg-[#5f259f] text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-mobile-alt text-xl"></i>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <span class="text-[10px] font-black text-slate-800 uppercase tracking-widest">PhonePe 📱</span>
+                                </div>
+                            </div>
+
+                            <!-- Paytm -->
+                            <div (click)="setUPIApp('paytm')" 
+                                [class.border-sky-500]="upiApp === 'paytm'"
+                                [class.bg-sky-500-5]="upiApp === 'paytm'"
+                                class="cursor-pointer p-6 border-2 border-glass-border rounded-3xl flex flex-col items-center justify-center space-y-3 hover:border-sky-300 transition-all shadow-sm group">
+                                <div class="w-12 h-12 rounded-2xl bg-[#00baf2] text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-wallet text-xl"></i>
+                                </div>
+                                <div class="flex flex-col items-center">
+                                    <span class="text-[10px] font-black text-slate-800 uppercase tracking-widest">Paytm 📱</span>
+                                </div>
+                            </div>
+
+                            <!-- QR Scan -->
+                            <div (click)="setUPIApp('other')" 
+                                [class.border-red-600]="upiApp === 'other'"
+                                [class.bg-red-600-5]="upiApp === 'other'"
+                                class="cursor-pointer p-6 border-2 border-glass-border rounded-3xl flex flex-col items-center justify-center space-y-3 hover:border-red-300 transition-all shadow-sm group">
+                                <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                    <i class="fas fa-qrcode text-xl text-red-500"></i>
+                                </div>
+                                <span class="text-[10px] font-black text-slate-800 uppercase tracking-widest">Scan QR</span>
+                            </div>
+                        </div>
+
+                        @if (showQR) {
+                            <div class="flex flex-col items-center justify-center p-8 bg-white rounded-[3rem] border-2 border-slate-900 shadow-xl space-y-6 animate-reveal">
+                                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 relative group">
+                                    <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + upiQRCodeData" 
+                                         class="w-48 h-48 group-hover:opacity-20 transition-opacity">
+                                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-slate-800 flex-col gap-2">
+                                        <i class="fas fa-camera text-3xl"></i>
+                                        <span class="text-[10px] font-black uppercase">Scan to Authorize</span>
+                                    </div>
+                                </div>
+                                <div class="text-center space-y-1">
+                                    <p class="text-xs font-black text-slate-900 uppercase tracking-widest">Master Nexus QR</p>
+                                    <p class="text-[10px] font-bold text-muted uppercase">Accepts all Banking Signals</p>
+                                </div>
+                            </div>
                         }
                     </div>
-                    <p class="text-[9px] font-bold text-muted uppercase tracking-widest text-center mt-4">
-                        * Interest applied at 14% p.a. as per financial compliance.
-                    </p>
-                </div>
-                }
-
-                <!-- UPI Input (Conditional) -->
-                @if (paymentMethod === 'UPI') {
-                <div class="glass p-10 rounded-[3rem] space-y-8 border-glass-border shadow-xl animate-reveal-up">
-                    <h3
-                        class="text-xl font-black text-main uppercase italic border-b border-glass-border pb-6 flex items-center">
-                        <i class="fas fa-qrcode mr-4 text-red-600"></i>
-                        4. UPI Interface
-                    </h3>
-                    <div class="space-y-2">
-                        <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">UPI ID /
-                            VPA</label>
-                        <input type="text" [(ngModel)]="upiId" name="upiId" placeholder="username@bank" required
-                            class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold font-mono tracking-widest">
-                    </div>
-                </div>
-                }
-
-                <!-- Card Details Form (Conditional) -->
-                @if (paymentMethod === 'Card') {
-                <div class="glass p-10 rounded-[3rem] space-y-8 border-glass-border shadow-xl animate-reveal-up">
-                    <h3
-                        class="text-xl font-black text-main uppercase italic border-b border-glass-border pb-6 flex items-center">
-                        <i class="fas fa-lock mr-4 text-red-600"></i>
-                        4. Secure Vault Access
-                    </h3>
-                    <div class="space-y-6">
-                        <div class="space-y-2">
-                            <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Card
-                                Number</label>
-                            <input type="text" [(ngModel)]="cardNumber" name="cardNumber"
-                                placeholder="0000 0000 0000 0000" required maxlength="19"
-                                class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold font-mono tracking-widest">
-                        </div>
-                        <div class="grid grid-cols-2 gap-6">
-                            <div class="space-y-2">
-                                <label
-                                    class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">Expiry</label>
-                                <input type="text" [(ngModel)]="expiryDate" name="expiry" placeholder="MM/YY" required
-                                    maxlength="5"
-                                    class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold font-mono tracking-widest">
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-[9px] font-black uppercase tracking-widest text-muted ml-2">CVC /
-                                    CVV</label>
-                                <input type="password" [(ngModel)]="cvv" name="cvv" placeholder="***" required
-                                    maxlength="4"
-                                    class="w-full px-6 py-5 bg-bg-secondary border border-glass-border rounded-2xl outline-none focus:border-red-500 transition-all text-main font-bold font-mono tracking-widest">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                }
-
-                <button type="submit"
-                    [disabled]="loading || cartService.items().length === 0 || !isPaymentValid() || !isAddressValid()"
-                    class="w-full py-8 bg-red-600 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.4em] shadow-[0_30px_60px_-15px_rgba(220,38,38,0.5)] transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center space-x-6 disabled:opacity-50 disabled:grayscale disabled:scale-100 disabled:cursor-not-allowed">
-                    @if (loading) {
-                    <div class="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    <span>INITIALIZING...</span>
-                    } @else {
-                    <span>EXECUTE ORDER - ₹{{ finalTotal.toLocaleString() }}</span>
-                    <i class="fas fa-arrow-right"></i>
                     }
-                </button>
+
+                    <!-- Card Interface -->
+                    @if (paymentMethod === 'Card') {
+                    <div class="glass p-10 rounded-[3rem] space-y-8 border-glass-border shadow-xl animate-reveal">
+                        <h3 class="text-xl font-black text-main uppercase italic border-b border-glass-border pb-6 flex items-center">
+                            <i class="fas fa-shield-alt mr-4 text-emerald-500"></i>
+                            4. Secure Card Vault
+                        </h3>
+                        <div class="flex flex-col items-center justify-center py-8 space-y-6 text-center">
+                            <div class="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500 text-3xl shadow-inner">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="space-y-2">
+                                <p class="text-lg font-black text-main uppercase italic italic">Razorpay Secure Protocol</p>
+                                <p class="text-[10px] font-bold text-muted uppercase tracking-widest max-w-xs mx-auto">
+                                    Your card data is protected via 256-bit encryption. You will be redirected to the secure terminal.
+                                </p>
+                            </div>
+                            <div class="flex gap-4 opacity-50 grayscale hover:grayscale-0 transition-all">
+                                <i class="fab fa-cc-visa text-3xl"></i>
+                                <i class="fab fa-cc-mastercard text-3xl"></i>
+                                <i class="fab fa-cc-amex text-3xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    }
+
+                    <button type="submit"
+                        [disabled]="loading || !isPaymentValid()"
+                        class="w-full py-8 bg-red-600 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.4em] shadow-[0_30px_60px_-15px_rgba(220,38,38,0.5)] transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center space-x-6 disabled:opacity-50">
+                        @if (loading) {
+                        <div class="w-6 h-6 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        <span>PROCESSING...</span>
+                        } @else {
+                        <span>EXECUTE ACQUISITION - {{ finalTotalWithCoins | currency:'INR' }}</span>
+                        <i class="fas fa-check-circle"></i>
+                        }
+                    </button>
+                </div>
+                }
             </form>
         </div>
 
@@ -356,95 +367,50 @@
                                 class="w-full h-full object-contain group-hover:scale-110 transition-transform">
                         </div>
                         <div class="flex-grow">
-                            <p class="font-black text-main text-lg italic uppercase leading-tight">{{ item.product.name
-                                }}</p>
-                            <p class="text-[10px] font-black text-muted uppercase tracking-widest mt-1">Quantity: {{
-                                item.quantity }}</p>
+                            <p class="font-black text-main text-lg italic uppercase leading-tight">{{ item.product.name }}</p>
+                            <p class="text-[10px] font-black text-muted uppercase tracking-widest mt-1">Quantity: {{ item.quantity }}</p>
                         </div>
-                        <span class="font-black text-main text-xl italic">₹{{ (item.product.price *
-                            item.quantity).toLocaleString() }}</span>
+                        <span class="font-black text-main text-xl italic">₹{{ (item.product.price * item.quantity).toLocaleString() }}</span>
                     </div>
                     }
                 </div>
 
                 <div class="border-t border-glass-border pt-10 space-y-4">
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] font-black text-muted uppercase tracking-[0.3em]">Subtotal</span>
-                        <span class="font-black text-main text-lg italic">₹{{ cartService.subTotal().toLocaleString()
-                            }}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] font-black text-muted uppercase tracking-[0.3em]">Compliance Fees (Tax
-                            5%)</span>
-                        <span class="font-black text-main text-lg italic">₹{{ cartService.tax().toLocaleString()
-                            }}</span>
+                    <div class="flex justify-between items-center text-muted">
+                        <span class="text-[10px] font-black uppercase">Subtotal</span>
+                        <span class="font-black">₹{{ cartService.subTotal().toLocaleString() }}</span>
                     </div>
                     @if (cartService.discount() > 0) {
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] font-black text-muted uppercase tracking-[0.3em]">Institutional
-                            Discount</span>
-                        <span class="text-emerald-500 font-black text-lg italic">- ₹{{
-                            cartService.discount().toLocaleString() }}</span>
+                    <div class="flex justify-between items-center text-emerald-500">
+                        <span class="text-[10px] font-black uppercase">Nexus Direct Savings</span>
+                        <span class="font-black">- ₹{{ cartService.discount().toLocaleString() }}</span>
                     </div>
                     }
-                    @if (exchangeService.isExchangeActive()) {
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] font-black text-muted uppercase tracking-[0.3em]">Trade-In Exchange: {{
-                            exchangeService.selectedDevice()?.model }}</span>
-                        <span class="text-emerald-500 font-black text-lg italic">- ₹{{
-                            exchangeService.selectedDevice()?.baseValue?.toLocaleString() }}</span>
-                    </div>
-                    }
-                    <div class="flex justify-between items-center">
-                        <span class="text-[10px] font-black text-muted uppercase tracking-[0.3em]">Transit</span>
-                        @if (deliveryFee > 0) {
-                            <span class="text-main font-black text-lg italic">+ ₹{{ deliveryFee.toLocaleString() }}</span>
-                        } @else {
-                            <span class="text-emerald-500 font-black text-[10px] uppercase tracking-[0.3em]">COMPLIMENTARY</span>
+                    <!-- SuperCoins Redemption -->
+                    @if ((authService.userProfile()?.superCoins || 0) > 0) {
+                    <div class="p-6 bg-yellow-400-5 border border-yellow-400/20 rounded-3xl space-y-3 mt-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-yellow-400 flex items-center justify-center text-slate-900 shadow-lg animate-pulse">
+                                    <i class="fas fa-coins text-sm"></i>
+                                </div>
+                                <span class="text-[10px] font-black text-yellow-500 uppercase tracking-widest">Use SuperCoins (Max 5%)</span>
+                            </div>
+                            <input type="checkbox" [(ngModel)]="useSuperCoins" name="useSuper"
+                                class="w-5 h-5 accent-yellow-400 cursor-pointer">
+                        </div>
+                        @if (useSuperCoins) {
+                        <div class="flex justify-between items-center text-yellow-600 text-[10px] uppercase font-black pl-11">
+                            <span>Fidelity Credit Applied</span>
+                            <span>- ₹{{ superCoinsValue.toLocaleString() }}</span>
+                        </div>
                         }
                     </div>
+                    }
 
-                    <!-- Promo Code Integration -->
-                    <div class="pt-6 border-t border-glass-border">
-                        @if (!cartService.appliedCoupon()) {
-                        <div class="flex flex-col sm:flex-row gap-3">
-                            <input [(ngModel)]="couponCode" name="checkoutCoupon" type="text" placeholder="Promo Code"
-                                class="flex-grow bg-bg-secondary border border-glass-border rounded-xl px-4 py-3 text-main placeholder:text-muted font-bold uppercase tracking-wider text-[11px] focus:border-red-500 transition-all outline-none">
-                            <div class="flex gap-2 w-full sm:w-auto">
-                                <button type="button" (click)="applyCoupon()"
-                                    class="flex-1 sm:flex-none bg-red-600/10 border border-red-600/30 text-red-500 px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all whitespace-nowrap">
-                                    Apply
-                                </button>
-                                <button type="button" (click)="autoApplyBest()"
-                                    class="flex-1 sm:flex-none bg-indigo-600 border border-indigo-500 text-white px-5 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-indigo-500 transition-all shadow-lg shadow-indigo-600/20 whitespace-nowrap flex items-center justify-center space-x-2">
-                                    <i class="fas fa-magic"></i><span>Best Offer</span>
-                                </button>
-                            </div>
-                        </div>
-                        @if (cartService.couponError()) {
-                        <p class="text-red-500 text-[10px] font-bold mt-2 animate-pulse">{{ cartService.couponError() }}
-                        </p>
-                        }
-                        } @else {
-                        <div
-                            class="flex items-center justify-between bg-emerald-500/10 border border-emerald-500/30 p-4 rounded-xl">
-                            <div class="flex flex-col">
-                                <span class="text-emerald-500 font-black text-xs uppercase tracking-widest">{{
-                                    cartService.appliedCoupon()?.code }}</span>
-                                <span class="text-emerald-500/70 text-[9px] font-bold uppercase">{{
-                                    cartService.appliedCoupon()?.description }}</span>
-                            </div>
-                            <button type="button" (click)="removeCoupon()"
-                                class="text-emerald-500 hover:text-red-500 transition-colors">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                        }
-                    </div>
-                    <div class="flex justify-between items-center pt-6 border-t border-glass-border mt-4">
-                        <span class="text-xs font-black text-main uppercase tracking-[0.5em]">TOTAL ASSETS</span>
-                        <span class="text-4xl font-black text-red-600 italic">₹{{
-                            finalTotal.toLocaleString() }}</span>
+                    <div class="flex justify-between items-center text-main border-t border-glass-border pt-6 mt-6">
+                        <span class="text-xs font-black uppercase tracking-widest">Total Payment</span>
+                        <span class="text-4xl font-black text-red-600 italic">₹{{ finalTotalWithCoins.toLocaleString() }}</span>
                     </div>
                 </div>
             </div>
@@ -452,22 +418,15 @@
     </div>
     } @else {
     <!-- Success Screen -->
-    <div
-        class="text-center py-40 max-w-4xl mx-auto glass rounded-[5rem] p-24 border-glass-border shadow-2xl animate-reveal">
-        <div
-            class="w-32 h-32 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-12 animate-bounce shadow-2xl shadow-emerald-500/20">
+    <div class="text-center py-40 max-w-4xl mx-auto glass rounded-[5rem] p-24 border-glass-border animate-reveal">
+        <div class="w-32 h-32 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-12 animate-bounce">
             <i class="fas fa-check-double text-5xl"></i>
         </div>
         <h1 class="text-7xl font-black text-main mb-8 italic uppercase tracking-tighter">ORDER <br> SUCCESSFUL.</h1>
-        @if (orderId) {
-        <p class="text-xs font-black text-emerald-500 uppercase tracking-[0.5em] mb-8">Order ID: {{ orderId }}</p>
-        }
         <p class="text-2xl text-muted font-semibold leading-relaxed mb-16 max-w-2xl mx-auto">
-            The hardware is being synchronized with your coordinates. A digital confirmation record has been dispatched
-            to your comms.
+            The hardware is being synchronized with your coordinates. A digital confirmation record has been dispatched to your comms.
         </p>
-        <button routerLink="/"
-            class="px-16 py-7 bg-red-600 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.5em] shadow-[0_30px_60px_-15px_rgba(220,38,38,0.5)] hover:scale-105 transition-all">
+        <button routerLink="/" class="px-16 py-7 bg-red-600 text-white rounded-[2rem] font-black text-xs uppercase hover:scale-105 transition-all">
             RETURN TO NEXUS
         </button>
     </div>

@@ -27,6 +27,7 @@ export class ProductList implements OnDestroy {
   minPrice = signal(0);
   maxPrice = signal(200000);
   minRating = signal(0);
+  selectedBrand = signal<string>('');
 
   // Pagination Signal
   visibleCount = signal(12);
@@ -63,9 +64,10 @@ export class ProductList implements OnDestroy {
     toObservable(this.sortOption),
     toObservable(this.minPrice),
     toObservable(this.maxPrice),
-    toObservable(this.minRating)
+    toObservable(this.minRating),
+    toObservable(this.selectedBrand)
   ]).pipe(
-    map(([params, products, searchQueryValue, sort, minP, maxP, minR]) => {
+    map(([params, products, searchQueryValue, sort, minP, maxP, minR, brand]) => {
       const category = params['category'];
       let list = products || [];
 
@@ -93,6 +95,12 @@ export class ProductList implements OnDestroy {
       const minRatingVal = minR || 0;
       if (minRatingVal > 1) {
         list = list.filter(p => p.rating >= minRatingVal);
+      }
+
+      // 5. Filter by Brand
+      const brandVal = brand || '';
+      if (brandVal) {
+        list = list.filter(p => p.name.toLowerCase().includes(brandVal.toLowerCase()));
       }
 
       // 5. Sorting
@@ -158,6 +166,24 @@ export class ProductList implements OnDestroy {
 
   loadMore() {
     this.visibleCount.update(n => n + 12);
+  }
+
+  setBrand(brand: string) {
+    this.selectedBrand.set(brand);
+    this.visibleCount.set(12);
+  }
+
+  setRating(rating: number) {
+    this.minRating.set(rating);
+    this.visibleCount.set(12);
+  }
+
+  resetFilters() {
+    this.minPrice.set(0);
+    this.maxPrice.set(200000);
+    this.minRating.set(0);
+    this.selectedBrand.set('');
+    this.sortOption.set('featured');
   }
 
   ngOnDestroy() {

@@ -53,13 +53,14 @@ export class AddressService {
     addAddress(addr: Omit<Address, 'id'>) {
         const newAddr = { ...addr, id: Math.random().toString(36).substr(2, 9) };
         const current = this.addresses();
+        let nextAddresses = [...current];
 
         if (newAddr.isDefault) {
             // If new is default, unmark others
-            current.forEach(a => a.isDefault = false);
+            nextAddresses = nextAddresses.map(a => ({ ...a, isDefault: false }));
         }
 
-        this.saveAddresses([...current, newAddr]);
+        this.saveAddresses([...nextAddresses, newAddr]);
     }
 
     updateAddress(id: string, updates: Partial<Address>) {

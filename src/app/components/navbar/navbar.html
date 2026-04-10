@@ -63,6 +63,8 @@
         <a routerLink="/compare" routerLinkActive="text-red-600 border-b-2 border-red-600"
           class="text-[11px] font-black uppercase tracking-[0.4em] text-muted hover:text-main transition-all py-2">{{
           'NAV_COMPARE' | translate }}</a>
+        <a routerLink="/support" routerLinkActive="text-red-600 border-b-2 border-red-600"
+          class="text-[11px] font-black uppercase tracking-[0.4em] text-muted hover:text-main transition-all py-2">Support</a>
       </div>
 
       <!-- Search Bar -->
@@ -296,6 +298,13 @@
               <span class="text-[10px] font-black uppercase tracking-[0.3em] text-main">{{ 'NAV_ORDERS' | translate
                 }}</span>
             </a>
+            @if (user.role === 'admin') {
+            <a routerLink="/admin" (click)="isProfileOpen = false"
+              class="flex items-center px-8 py-4 hover:bg-black/5 dark:hover:bg-white/5 transition-all group">
+              <i class="fas fa-hammer mr-5 text-red-500 transition-colors"></i>
+              <span class="text-[10px] font-black uppercase tracking-[0.3em] text-red-500">Admin Protocol</span>
+            </a>
+            }
             <hr class="my-3 border-glass-border mx-6">
             <button (click)="logoutAndClose()"
               class="w-full flex items-center px-8 py-4 text-red-500 hover:bg-red-500/10 transition-all group">

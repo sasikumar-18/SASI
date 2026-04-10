@@ -1,12 +1,26 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 min-h-screen">
     <div class="space-y-16 animate-reveal">
-        <div class="space-y-4">
-            <span class="text-red-500 font-black text-[10px] uppercase tracking-[0.5em]">Inventory History</span>
-            <h1 class="text-7xl font-black text-main tracking-tighter italic uppercase">MY DIGITAL <br> <span
-                    class="text-muted opacity-30">VAULT.</span></h1>
+        @if (orders$ | async; as orders) {
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div class="space-y-4">
+                <span class="text-red-500 font-black text-[10px] uppercase tracking-[0.5em]">Inventory History</span>
+                <h1 class="text-7xl font-black text-main tracking-tighter italic uppercase">MY DIGITAL <br> <span
+                        class="text-muted opacity-30">VAULT.</span></h1>
+            </div>
+            
+            @if (orders.length > 0) {
+            <div class="glass px-8 py-4 rounded-3xl border border-glass-border flex items-center gap-6 animate-reveal">
+                <div class="w-12 h-12 bg-red-500/10 text-red-500 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/5">
+                    <i class="fas fa-shopping-bag text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-black text-muted uppercase tracking-[0.3em]">Total Hardware Records</p>
+                    <p class="text-2xl font-black text-main italic uppercase">{{ orders.length }} Orders</p>
+                </div>
+            </div>
+            }
         </div>
 
-        @if (orders$ | async; as orders) {
         @if (orders.length > 0) {
         <div class="space-y-10">
             @for (order of orders; track order._id) {
@@ -61,46 +75,58 @@
                             }
                         </div>
 
-                        <!-- Tracking Timeline (Shows when active) -->
-                        @if (trackingOrderId === order._id) {
-                        <div class="mt-8 p-6 bg-secondary/50 rounded-3xl border border-glass-border animate-reveal">
-                            <p class="text-[9px] font-black text-main uppercase tracking-[0.3em] mb-6">Signal Tracker
-                            </p>
-                            <div class="relative flex justify-between items-center">
-                                <!-- Progress Line -->
-                                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-glass-border -z-10">
-                                </div>
-                                <div class="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-red-600 transition-all duration-1000 -z-10"
-                                    [style.width]="getProgressWidth(getDisplayStatus(order))">
+                        <!-- Signal Tracker Timeline -->
+                        <div class="mt-8 p-10 bg-indigo-500/5 rounded-[3rem] border border-indigo-500/10 shadow-2xl animate-reveal-up">
+                            <div class="flex justify-between items-center mb-10">
+                                <h4 class="text-sm font-black text-main uppercase italic flex items-center">
+                                    <i class="fas fa-radar mr-3 text-red-500 animate-pulse"></i>
+                                    Nexus Signal Tracker
+                                </h4>
+                                <span class="text-[9px] font-black text-red-500 uppercase tracking-[0.3em]">Status: {{ getDisplayStatus(order) }}</span>
+                            </div>
+
+                            <div class="relative px-6">
+                                <!-- Base Track -->
+                                <div class="absolute left-6 right-6 top-5 h-1 bg-glass-border -z-10 rounded-full"></div>
+                                
+                                <!-- Progress Fill -->
+                                <div class="absolute left-6 top-5 h-1 bg-red-600 transition-all duration-[1500ms] ease-vault -z-10 rounded-full shadow-[0_0_15px_rgba(220,38,38,0.5)]"
+                                    [style.width.%]="getProgressWidthPercentage(getDisplayStatus(order))">
                                 </div>
 
-                                @for (step of getTrackingSteps(getDisplayStatus(order)); track step) {
-                                <div class="flex flex-col items-center gap-2 bg-bg-secondary px-2">
-                                    <div class="w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-500"
-                                        [class.border-red-600]="isStepCompleted(getDisplayStatus(order), step)"
-                                        [class.bg-red-600]="isStepCompleted(getDisplayStatus(order), step)"
-                                        [class.text-white]="isStepCompleted(getDisplayStatus(order), step)"
-                                        [class.border-glass-border]="!isStepCompleted(getDisplayStatus(order), step)"
-                                        [class.text-muted]="!isStepCompleted(getDisplayStatus(order), step)">
-                                        <i class="fas" [class.fa-box]="step === 'Ordered'"
-                                            [class.fa-truck]="step === 'Shipped'" [class.fa-home]="step === 'Delivered'"
-                                            [class.fa-undo]="step === 'Return Requested'"
-                                            [class.fa-file-signature]="step === 'Return Approved'"
-                                            [class.fa-money-bill-wave]="step === 'Refund Initiated'"
-                                            [class.fa-check-circle]="step === 'Refunded'"
-                                            [class.fa-times-circle]="step === 'Cancelled'">
-                                        </i>
+                                <div class="flex justify-between items-start">
+                                    @for (step of getTrackingSteps(getDisplayStatus(order)); track step) {
+                                    <div class="flex flex-col items-center space-y-4">
+                                        <div class="w-10 h-10 rounded-2xl flex items-center justify-center border-2 transition-all duration-700 shadow-xl"
+                                            [class.border-red-600]="isStepCompleted(getDisplayStatus(order), step)"
+                                            [class.bg-red-600]="isStepCompleted(getDisplayStatus(order), step)"
+                                            [class.text-white]="isStepCompleted(getDisplayStatus(order), step)"
+                                            [class.scale-110]="isStepCompleted(getDisplayStatus(order), step)"
+                                            [class.border-glass-border]="!isStepCompleted(getDisplayStatus(order), step)"
+                                            [class.text-muted]="!isStepCompleted(getDisplayStatus(order), step)"
+                                            [class.bg-bg-secondary]="!isStepCompleted(getDisplayStatus(order), step)">
+                                            <i class="fas" [class.fa-box-open]="step === 'Ordered'"
+                                                [class.fa-shipping-fast]="step === 'Shipped'" [class.fa-box-check]="step === 'Delivered'"
+                                                [class.fa-undo]="step === 'Return Requested'"
+                                                [class.fa-file-signature]="step === 'Return Approved'"
+                                                [class.fa-money-bill-wave]="step === 'Refund Initiated'"
+                                                [class.fa-check-double]="step === 'Refunded'"
+                                                [class.fa-times-circle]="step === 'Cancelled'">
+                                            </i>
+                                        </div>
+                                        <div class="flex flex-col items-center">
+                                            <span class="text-[9px] font-black uppercase tracking-widest text-center"
+                                                [class.text-main]="isStepCompleted(getDisplayStatus(order), step)"
+                                                [class.text-muted]="!isStepCompleted(getDisplayStatus(order), step)">{{ step }}</span>
+                                            @if (isStepCompleted(getDisplayStatus(order), step)) {
+                                                <span class="text-[8px] font-bold text-emerald-500 uppercase tracking-tighter mt-1">Confirmed</span>
+                                            }
+                                        </div>
                                     </div>
-                                    <span
-                                        class="text-[8px] font-black uppercase tracking-widest text-center max-w-[80px]"
-                                        [class.text-red-500]="isStepCompleted(getDisplayStatus(order), step)"
-                                        [class.text-muted]="!isStepCompleted(getDisplayStatus(order), step)">{{ step
-                                        }}</span>
+                                    }
                                 </div>
-                                }
                             </div>
                         </div>
-                        }
                     </div>
 
                     <!-- Shipping Info -->

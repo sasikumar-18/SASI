@@ -46,26 +46,27 @@ export class Orders implements OnInit {
 
     trackingOrderId: string | null = null;
 
-    // Status Steps for Tracking UI
+    // High-Precision Lifecycle Steps
     private normalSteps = ['Ordered', 'Shipped', 'Delivered'];
     private returnSteps = ['Return Requested', 'Return Approved', 'Refund Initiated', 'Refunded'];
 
     getTrackingSteps(status: string): string[] {
-        if (status === 'Cancelled') {
+        const lowerStatus = status.toLowerCase();
+        if (lowerStatus === 'cancelled') {
             return ['Ordered', 'Cancelled'];
         }
-        if (this.returnSteps.includes(status) || status === 'Returned') {
+        if (this.returnSteps.some(s => s.toLowerCase() === lowerStatus) || lowerStatus === 'returned') {
             return this.returnSteps;
         }
         return this.normalSteps;
     }
 
-    getProgressWidth(status: string): string {
+    getProgressWidthPercentage(status: string): number {
         const steps = this.getTrackingSteps(status);
         const idx = steps.indexOf(status);
-        if (idx === -1) return '0%';
-        if (idx === steps.length - 1) return '100%';
-        return `${(idx / (steps.length - 1)) * 100}%`;
+        if (idx === -1) return 0;
+        if (idx === steps.length - 1) return 100;
+        return (idx / (steps.length - 1)) * 100;
     }
 
     getStatusColor(status: string): string {

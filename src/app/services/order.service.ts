@@ -16,8 +16,13 @@ export interface OrderRequest {
         phone: string;
     };
     paymentMethod: string;
-    createdAt?: number;
-    status?: 'pending' | 'shipped' | 'delivered';
+    createdAt?: number | string;
+    orderStatus?: string;
+    trackingNumber?: string;
+    trackingHistory?: any[];
+    taxAmount?: number;
+    shippingCost?: number;
+    notes?: string;
 }
 
 @Injectable({
@@ -35,7 +40,7 @@ export class OrderService {
 
     getUserOrders(userId: string): Observable<any[]> {
         const mockOrder = {
-            _id: 'MOCK-ATB6C2',
+            _id: 'NEXUS-' + Math.random().toString(36).substring(2, 8).toUpperCase(),
             items: [{ name: 'System Mock Order', quantity: 1, price: 0, imageUrl: 'https://placehold.co/100x100/101010/white?text=Nexus' }],
             totalAmount: 0,
             orderStatus: 'Ordered',
@@ -60,5 +65,10 @@ export class OrderService {
         return this.http.patch(`${this.apiUrl}/${orderId}/status`, { status }).pipe(
             catchError(() => of({ _id: orderId, orderStatus: status }))
         );
+    }
+
+    // Admin Protocol
+    getAllOrders(): Observable<any[]> {
+        return this.http.get<any[]>('http://localhost:5000/api/admin/orders');
     }
 }

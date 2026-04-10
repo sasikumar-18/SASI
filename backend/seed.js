@@ -167,11 +167,11 @@ const products = [
     "originalPrice": 104158,
     "discount": 24,
     "description": "The Google Pixel 10 Pro is the smartest phone on earth, powered by custom Tensor silicon and Google AI magic.",
-    "imageUrl": "https://images.unsplash.com/photo-1724083318182-edfcfff66da2?auto=format&fit=crop&q=80&w=1200",
+    "imageUrl": "https://images.unsplash.com/photo-1724438192720-c19a90e24a69?auto=format&fit=crop&q=80&w=1200",
     "images": [
-      "https://images.unsplash.com/photo-1724083318182-edfcfff66da2?auto=format&fit=crop&w=1200",
-      "https://images.unsplash.com/photo-1723824419904-e3a152e92c68?auto=format&fit=crop&w=1200",
-      "https://images.unsplash.com/photo-1723140502120-1d89771ba099?auto=format&fit=crop&w=1200"
+      "https://images.unsplash.com/photo-1724438192720-c19a90e24a69?auto=format&fit=crop&w=1200",
+      "https://images.unsplash.com/photo-1724438192699-89f587b04c24?auto=format&fit=crop&w=1200",
+      "https://images.unsplash.com/photo-1724322664367-5cc0f47b5d9d?auto=format&fit=crop&w=1200"
     ],
     "category": "mobile",
     "stock": 50,
@@ -2051,14 +2051,34 @@ const products = [
   }
 ];
 
-// User Schema
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, default: 'user' }
+    role: { type: String, default: 'user' },
+    phone: String,
+    profilePic: String,
+    bio: String,
+    savedAddresses: Array,
+    nexusPoints: Number,
+    usedCoupons: Array,
+    createdAt: { type: Date, default: Date.now }
 });
 const User = mongoose.model('User', userSchema);
+
+const orderSchema = new mongoose.Schema({
+    userId: String,
+    items: Array,
+    totalAmount: Number,
+    shippingAddress: Object,
+    paymentMethod: String,
+    paymentStatus: String,
+    orderStatus: String,
+    trackingNumber: String,
+    trackingHistory: Array,
+    createdAt: { type: Date, default: Date.now }
+});
+const Order = mongoose.model('Order', orderSchema);
 
 async function seedDB() {
     try {
@@ -2071,9 +2091,90 @@ async function seedDB() {
         const adminEmail = 'admin@mobileshop.com';
         const existingAdmin = await User.findOne({ email: adminEmail });
         if (!existingAdmin) {
-            await new User({ name: 'Nexus Admin', email: adminEmail, password: 'password', role: 'admin' }).save();
+            await new User({ 
+                name: 'Nexus Admin', 
+                email: adminEmail, 
+                password: 'password', 
+                role: 'admin',
+                phone: '+91 9876543210',
+                bio: 'Lead System Administrator',
+                nexusPoints: 10000
+            }).save();
             console.log('👤 Admin created: admin@mobileshop.com');
         }
+
+        // --- SEED ADDITIONAL TEST USERS ---
+        const testUserEmail = 'user@mobileshop.com';
+        let testUser = await User.findOne({ email: testUserEmail });
+        if (!testUser) {
+            testUser = await new User({
+                name: 'Elite Operative',
+                email: testUserEmail,
+                password: 'password',
+                role: 'user',
+                phone: '+91 7418529630',
+                bio: 'Tech Enthusiast & Early Adopter',
+                profilePic: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&h=200',
+                nexusPoints: 750,
+                savedAddresses: [{
+                    name: 'Home Base',
+                    street: '123 Cyber Street',
+                    city: 'New Delhi',
+                    state: 'Delhi',
+                    zip: '110001',
+                    isDefault: true
+                }]
+            }).save();
+            console.log('👤 Test User created: user@mobileshop.com');
+        }
+
+        // --- SEED ORDER HISTORY FOR TEST USER ---
+        await Order.deleteMany({ userId: testUser._id });
+        const mockOrders = [
+            {
+                userId: testUser._id.toString(),
+                items: [{
+                    productId: 'p1',
+                    name: 'iPhone 15 Pro Max',
+                    price: 159900,
+                    quantity: 1,
+                    imageUrl: 'https://images.unsplash.com/photo-1696446701796-da61225697cc?auto=format&fit=crop&w=800&h=800&q=80'
+                }],
+                totalAmount: 159900,
+                shippingAddress: testUser.savedAddresses[0],
+                paymentMethod: 'Credit Card',
+                paymentStatus: 'Paid',
+                orderStatus: 'Delivered',
+                trackingNumber: 'NX-DEL872193',
+                trackingHistory: [
+                    { status: 'Ordered', timestamp: new Date(Date.now() - 86400000 * 5) },
+                    { status: 'Shipped', timestamp: new Date(Date.now() - 86400000 * 4) },
+                    { status: 'Delivered', timestamp: new Date(Date.now() - 86400000 * 3) }
+                ]
+            },
+            {
+                userId: testUser._id.toString(),
+                items: [{
+                    productId: 'p4',
+                    name: 'Samsung Galaxy S24 Ultra',
+                    price: 129999,
+                    quantity: 1,
+                    imageUrl: 'https://images.unsplash.com/photo-1707231433984-7a40b2999516?auto=format&fit=crop&w=800&h=800&q=80'
+                }],
+                totalAmount: 129999,
+                shippingAddress: testUser.savedAddresses[0],
+                paymentMethod: 'COD',
+                paymentStatus: 'Pending',
+                orderStatus: 'Shipped',
+                trackingNumber: 'NX-TRAW29188',
+                trackingHistory: [
+                    { status: 'Ordered', timestamp: new Date(Date.now() - 86400000 * 2) },
+                    { status: 'Shipped', timestamp: new Date(Date.now() - 86400000 * 1) }
+                ]
+            }
+        ];
+        await Order.insertMany(mockOrders);
+        console.log(`📦 Seeded ${mockOrders.length} historical orders for test user!`);
         process.exit();
     } catch (err) {
         console.error('❌ Seeding Error:', err);

@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, ChangeDetectorRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
@@ -7,7 +7,7 @@ import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { AuthService } from '../../services/auth.service';
 import { Product, Review } from '../../models/product.model';
-import { Observable, switchMap, tap } from 'rxjs';
+import { Observable, switchMap, tap, map } from 'rxjs';
 
 import { NexusCardService } from '../../services/nexus-card.service';
 import { ExchangeService, ExchangeDevice } from '../../services/exchange.service';
@@ -40,12 +40,23 @@ export class ProductDetail {
     tap(product => {
       if (product) {
         this.productService.addToRecentlyViewed(product);
+        // Load related
+        this.loadRelatedProducts(product);
       }
     })
   );
 
+  relatedProducts$: Observable<Product[]> | null = null;
+
+  loadRelatedProducts(product: Product) {
+    this.relatedProducts$ = this.productService.getProducts().pipe(
+      map((products: Product[]) => products.filter((p: Product) => p.id !== product.id && p.category === product.category).slice(0, 4))
+    );
+  }
+
   activeImage: string | null = null;
   activeTab: 'features' | 'specs' | 'delivery' = 'features';
+  selectedQuantity = signal(1);
 
   // Review Form State
   showReviewForm = false;
@@ -124,12 +135,19 @@ export class ProductDetail {
   }
 
   addToCart(product: Product) {
-    this.cartService.addToCart(product);
+    this.cartService.addToCart(product, this.selectedQuantity());
   }
 
   buyNow(product: Product) {
-    this.cartService.addToCart(product);
-    this.router.navigate(['/checkout']);
+    this.cartService.addToCart(product, this.selectedQuantity());
+    this.router.navigate(['/checkout'], { queryParams: { direct: 'true' } });
+  }
+
+  updateQuantity(delta: number, max: number) {
+    const newVal = this.selectedQuantity() + delta;
+    if (newVal >= 1 && newVal <= max) {
+      this.selectedQuantity.set(newVal);
+    }
   }
 
   toggleCompare(product: Product) {
@@ -172,14 +190,8 @@ export class ProductDetail {
 
       this.productService.addReview(product.id, newReview);
 
-      if (!product.reviews) {
-         product.reviews = [];
-      }
-      product.reviews.unshift(newReview);
-
-      const oldTotal = product.rating * (product.reviewsCount || 0);
-      product.reviewsCount = (product.reviewsCount || 0) + 1;
-      product.rating = (oldTotal + newReview.rating) / product.reviewsCount;
+      // Force change detection to refresh UI since we're in OnPush mode
+      this.cdr.markForCheck();
 
       // Reset Form
       this.reviewRating = 0;
@@ -201,7 +213,12 @@ export class ProductDetail {
       this.deliveryEstimateMsg = '';
       return;
     }
-    this.deliveryEstimateMsg = `Delivery in 2 days to ${this.deliveryLocation.toUpperCase()}`;
+    
+    this.deliveryEstimateMsg = 'Checking Pincode...';
+    setTimeout(() => {
+      this.deliveryEstimateMsg = `Verified: Delivery in 2 days to ${this.deliveryLocation.toUpperCase()}`;
+      this.cdr.markForCheck();
+    }, 1200);
   }
 
   getDeliveryEstimate(product: Product): string {

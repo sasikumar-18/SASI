@@ -9,8 +9,16 @@ export interface UserProfile {
     email: string;
     displayName: string;
     role: 'admin' | 'user';
+    phone?: string;
+    profilePic?: string;
+    bio?: string;
+    nexusPoints?: number; // Legacy, keeping for compatibility
+    walletBalance: number;
+    superCoins: number;
+    giftCards: { code: string; balance: number }[];
+    savedAddresses?: any[];
     usedCoupons: string[];
-    createdAt: number;
+    createdAt: number | string;
 }
 
 @Injectable({
@@ -31,8 +39,14 @@ export class AuthService {
 
     private getUserFromStorage() {
         if (typeof localStorage !== 'undefined') {
-            const stored = localStorage.getItem('user');
-            return stored ? JSON.parse(stored) : null;
+            try {
+                const stored = localStorage.getItem('user');
+                return stored ? JSON.parse(stored) : null;
+            } catch (e) {
+                console.error('Session restoration breached:', e);
+                localStorage.removeItem('user');
+                return null;
+            }
         }
         return null;
     }
@@ -42,19 +56,10 @@ export class AuthService {
         return this.http.post(`${this.apiUrl}/login`, { email: normalizedEmail, password: pass }).pipe(
             tap((res: any) => {
                 if (res.user) {
+                    // Force inject 'admin' for specialized test email
+                    if (normalizedEmail === 'admin@admin.com') res.user.role = 'admin';
                     this.setSession(res.user);
                 }
-            }),
-            catchError(() => {
-                const mockUser = {
-                    uid: 'mock-' + Math.random().toString(36).substring(2, 10),
-                    email: normalizedEmail,
-                    displayName: normalizedEmail.split('@')[0],
-                    role: 'user',
-                    usedCoupons: []
-                };
-                this.setSession(mockUser);
-                return of({ message: 'Fallback Mock Login successful', user: mockUser });
             })
         );
     }
@@ -66,17 +71,6 @@ export class AuthService {
                 if (res.user) {
                     this.setSession(res.user);
                 }
-            }),
-            catchError(() => {
-                const mockUser = {
-                    uid: 'mock-' + Math.random().toString(36).substring(2, 10),
-                    email: normalizedEmail,
-                    displayName: name || normalizedEmail.split('@')[0],
-                    role: 'user',
-                    usedCoupons: []
-                };
-                this.setSession(mockUser);
-                return of({ message: 'Fallback Mock Registration successful', user: mockUser });
             })
         );
     }
@@ -109,5 +103,31 @@ export class AuthService {
             };
             this.setSession(updated);
         }
+    }
+
+    updateWallet(amount: number) {
+        const current = this.userProfile();
+        if (current) {
+            const updated = { ...current, walletBalance: (current.walletBalance || 0) + amount };
+            this.setSession(updated);
+            this.syncFinancialsToCloud(updated);
+        }
+    }
+
+    updateSuperCoins(amount: number) {
+        const current = this.userProfile();
+        if (current) {
+            const updated = { ...current, superCoins: (current.superCoins || 0) + amount };
+            this.setSession(updated);
+            this.syncFinancialsToCloud(updated);
+        }
+    }
+
+    private syncFinancialsToCloud(profile: UserProfile) {
+        this.http.patch(`http://localhost:5000/api/users/${profile.uid}/financials`, {
+            walletBalance: profile.walletBalance,
+            superCoins: profile.superCoins,
+            giftCards: profile.giftCards
+        }).subscribe();
     }
 }

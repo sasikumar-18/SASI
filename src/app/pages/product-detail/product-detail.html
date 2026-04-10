@@ -56,6 +56,22 @@
                     }
                 </div>
 
+                <!-- Quantity Selector -->
+                <div class="hidden lg:flex items-center justify-between bg-slate-100 p-3 rounded-2xl border border-slate-200 mt-8 group">
+                    <span class="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-4">Acquisition Volume</span>
+                    <div class="flex items-center bg-white rounded-xl p-1 border border-slate-200 shadow-sm">
+                        <button (click)="updateQuantity(-1, product.stock)" [disabled]="selectedQuantity() <= 1"
+                            class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-slate-50 disabled:opacity-20 transition-all text-slate-900 border-none">
+                            <i class="fas fa-minus text-[10px]"></i>
+                        </button>
+                        <span class="w-12 text-center font-black text-slate-900 text-lg">{{ selectedQuantity() }}</span>
+                        <button (click)="updateQuantity(1, product.stock)" [disabled]="selectedQuantity() >= product.stock"
+                            class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-slate-50 disabled:opacity-20 transition-all text-slate-900 border-none">
+                            <i class="fas fa-plus text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Desktop Action Buttons -->
                 <div class="hidden lg:grid grid-cols-2 gap-4 mt-6">
                     <button (click)="addToCart(product)" [disabled]="product.stock <= 0" 
@@ -102,6 +118,21 @@
                         <span class="text-emerald-600 font-black text-lg">{{ product.discount || 14 }}% OFF</span>
                     </div>
 
+                    <!-- Exchange Offer Badge -->
+                    <div (click)="showExchangePortal = true" 
+                        class="mt-6 p-4 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-between group cursor-pointer hover:bg-indigo-100 transition-all">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-600/20 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-repeat"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-indigo-950 uppercase tracking-wide">Exchange Offer</h4>
+                                <p class="text-[10px] font-bold text-indigo-600">Save up to ₹25,000 on your new device</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-indigo-400 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+
                     <p class="text-slate-500 text-sm font-medium mt-4">{{ product.description }}</p>
                 </div>
 
@@ -137,9 +168,18 @@
                         </div>
                         <button (click)="checkDelivery()" class="w-full sm:w-auto bg-slate-100 text-slate-700 hover:bg-slate-200 px-8 py-4 rounded-xl font-bold text-sm tracking-wide active:scale-95 transition-all">Check Radius</button>
                     </div>
-                    <div class="flex items-center gap-3 text-sm bg-emerald-50 text-emerald-700 py-3 px-4 rounded-xl border border-emerald-100 inline-flex">
-                        <i class="fas fa-check-circle"></i>
-                        <span class="font-bold">{{ getDeliveryEstimate(product) }} &mdash; Free Delivery Applied</span>
+                    <div class="flex flex-col gap-3">
+                        @if (deliveryEstimateMsg) {
+                            <div class="flex items-center gap-3 text-sm bg-emerald-50 text-emerald-700 py-3 px-4 rounded-xl border border-emerald-100 animate-reveal">
+                                <i class="fas fa-check-circle"></i>
+                                <span class="font-bold">{{ deliveryEstimateMsg }} &mdash; Free Delivery Applied</span>
+                            </div>
+                        } @else {
+                            <div class="flex items-center gap-3 text-sm bg-slate-50 text-slate-500 py-3 px-4 rounded-xl border border-slate-100">
+                                <i class="fas fa-info-circle"></i>
+                                <span class="font-bold">{{ getDeliveryEstimate(product) }} &mdash; Free Delivery Applied</span>
+                            </div>
+                        }
                     </div>
                 </div>
 
@@ -178,6 +218,20 @@
 
         <!-- Sticky Mobile Actions -->
         <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-slate-200 p-4 shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.15)] z-50 pb-safe">
+            <div class="flex items-center justify-between mb-4 bg-slate-50 p-2 rounded-xl border border-slate-100">
+                <span class="text-[8px] font-black uppercase text-slate-400 tracking-widest ml-2">Volume</span>
+                <div class="flex items-center bg-white rounded-lg p-1 border border-slate-100">
+                    <button (click)="updateQuantity(-1, product.stock)" [disabled]="selectedQuantity() <= 1"
+                        class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-slate-50 disabled:opacity-20 transition-all">
+                        <i class="fas fa-minus text-[8px]"></i>
+                    </button>
+                    <span class="w-8 text-center font-black text-slate-900 text-sm">{{ selectedQuantity() }}</span>
+                    <button (click)="updateQuantity(1, product.stock)" [disabled]="selectedQuantity() >= product.stock"
+                        class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-slate-50 disabled:opacity-20 transition-all">
+                        <i class="fas fa-plus text-[8px]"></i>
+                    </button>
+                </div>
+            </div>
             <div class="grid grid-cols-[1fr_1.5fr] gap-3 max-w-md mx-auto">
                 <button (click)="addToCart(product)" [disabled]="product.stock <= 0" 
                     class="h-14 bg-slate-50 border-2 border-slate-200 text-slate-800 rounded-xl font-bold text-xs uppercase tracking-wide active:scale-95 transition-all flex items-center justify-center gap-2">
@@ -310,8 +364,130 @@
             </div>
         </div>
 
+        <!-- Related Products: Smart Recommendations -->
+        @if (relatedProducts$ | async; as related) {
+            @if (related.length > 0) {
+            <div class="mt-32 pb-24 animate-reveal-up border-t border-slate-200/50 pt-24">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+                            <span class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 italic">System Sync</span>
+                        </div>
+                        <h2 class="text-4xl font-black italic uppercase tracking-tighter text-slate-900 leading-none">People Also <span class="text-red-500 underline decoration-red-600/20 underline-offset-[12px]">Acquired.</span></h2>
+                    </div>
+                    <button routerLink="/products" class="px-8 py-3 rounded-full border border-slate-200 text-[10px] font-black uppercase tracking-widest hover:bg-white transition-all shadow-sm">View Full Matrix</button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    @for (item of related; track item.id) {
+                    <div class="group bg-white border border-slate-200 rounded-[2.5rem] p-8 hover:border-red-600/20 hover:shadow-2xl hover:shadow-red-600/5 transition-all duration-700 hover:-translate-y-2">
+                        <div class="aspect-square mb-8 p-4 bg-slate-50 rounded-[2rem] overflow-hidden">
+                            <img [src]="item.imageUrl" [alt]="item.name" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700">
+                        </div>
+                        <div class="space-y-4">
+                            <div class="space-y-1">
+                                <span class="text-[8px] font-black uppercase tracking-[0.3em] text-red-500 italic">{{ item.category }}</span>
+                                <h3 class="text-xs font-black uppercase text-slate-900 truncate group-hover:text-red-500 transition-colors">{{ item.name }}</h3>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                                <span class="text-sm font-black italic">₹{{ item.price.toLocaleString() }}</span>
+                                <button [routerLink]="['/products', item.id]" class="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 group-hover:bg-red-600 group-hover:text-white transition-all shadow-sm">
+                                    <i class="fas fa-arrow-right text-[10px]"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+        }
+    </div> <!-- Close L4 div -->
+
+    <!-- ====== EXCHANGE PORTAL MODAL ====== -->
+    @if (showExchangePortal) {
+    <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 lg:p-8 animate-fade-in">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" (click)="showExchangePortal = false"></div>
+        <div class="relative bg-white w-full max-w-xl rounded-[3rem] shadow-2xl overflow-hidden animate-reveal-up border border-slate-100">
+            <!-- Modal Header -->
+            <div class="p-8 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-xl">
+                        <i class="fas fa-repeat text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-black text-slate-900 tracking-tight">Nexus Exchange</h3>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">Protocol Activation</p>
+                    </div>
+                </div>
+                <button (click)="showExchangePortal = false" class="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-red-600 hover:border-red-100 transition-all">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <!-- Modal Content -->
+            <div class="p-8 space-y-8 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                <!-- Device Selection -->
+                <div class="grid sm:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Brand</label>
+                        <select [(ngModel)]="selectedBrand" (change)="selectedModel = ''; updateValuation()"
+                            class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 text-sm font-bold text-slate-800 outline-none focus:border-indigo-400 transition-all cursor-pointer">
+                            <option value="">Select Platform</option>
+                            @for (brand of availableBrands; track brand) {
+                                <option [value]="brand">{{ brand }}</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Model</label>
+                        <select [(ngModel)]="selectedModel" (change)="updateValuation()" [disabled]="!selectedBrand"
+                            class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl p-4 text-sm font-bold text-slate-800 outline-none focus:border-indigo-400 transition-all cursor-pointer disabled:opacity-50">
+                            <option value="">Select Hardware</option>
+                            @for (model of filteredModels; track model.id) {
+                                <option [value]="model.id">{{ model.model }}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <!-- Condition Selection -->
+                <div class="space-y-4">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] ml-2">Hardware Integrity</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        @for (cond of ['perfect', 'good', 'average']; track cond) {
+                        <button (click)="selectedCondition = $any(cond); updateValuation()"
+                            [class.border-indigo-600]="selectedCondition === cond"
+                            [class.bg-indigo-50]="selectedCondition === cond"
+                            [class.text-indigo-600]="selectedCondition === cond"
+                            class="py-4 border-2 border-slate-100 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:bg-slate-50">
+                            {{ cond }}
+                        </button>
+                        }
+                    </div>
+                </div>
+                <!-- Valuation Result -->
+                @if (calculatedValue > 0) {
+                <div class="p-8 bg-black rounded-[2.5rem] text-center space-y-2 animate-reveal">
+                    <p class="text-[10px] font-black text-indigo-400 uppercase tracking-3em">Estimated Credit</p>
+                    <div class="text-4xl font-black text-white tracking-tighter">₹{{ calculatedValue | number:'1.0-0' }}</div>
+                    <p class="text-[9px] font-bold text-slate-500 uppercase">Applied to final acquisition cost</p>
+                </div>
+                }
+            </div>
+            <!-- Modal Footer -->
+            <div class="p-8 bg-slate-50 border-t border-slate-100 text-center">
+                <button (click)="confirmExchange()" [disabled]="!selectedModel || calculatedValue === 0"
+                    class="w-full h-16 bg-indigo-600 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-indigo-600/30 hover:bg-indigo-700 hover:-translate-y-1 disabled:grayscale disabled:opacity-50 transition-all">
+                    Initiate protocol transfer
+                </button>
+                <p class="mt-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest">Verification will be finalized during delivery transit</p>
+            </div>
+        </div>
     </div>
-    } @else {
+    }
+    } <!-- End of product$ | async (L3 close) -->
+
+    @if (!(product$ | async)) {
     <div class="h-screen w-full flex items-center justify-center">
         <div class="w-12 h-12 border-4 border-slate-200 border-t-red-600 rounded-full animate-spin"></div>
     </div>

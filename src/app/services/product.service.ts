@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Firestore, collection } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
 import { Product, Review } from '../models/product.model';
 
 @Injectable({
@@ -141,7 +141,6 @@ export class ProductService {
       "EMI starting from ₹7542/mo"
     ]
   },
-
   {
     "id": "p4",
     "name": "OnePlus 14 Pro",
@@ -2009,7 +2008,12 @@ export class ProductService {
         return this.http.get<Product[]>(`${this.apiUrl}/products`).pipe(
             tap(data => { 
                 if (data && data.length > 0) {
-                    this.products = data.map(p => ({...p, reviews: p.reviews || this.generateMockReviews()}));
+                    this.products = data.map(p => ({
+                      ...p, 
+                      id: p.id || (p as any)._id, // Map _id to id if missing
+                      stock: p.stock ?? 50,      // Ensure stock exists
+                      reviews: p.reviews || this.generateMockReviews()
+                    }));
                 }
             }),
             catchError(() => of(this.products))
@@ -2034,7 +2038,16 @@ export class ProductService {
 
     getFeaturedProducts(): Observable<Product[]> {
         return this.http.get<Product[]>(`${this.apiUrl}/products`).pipe(
-            tap(data => { if (data && data.length > 0) this.products = data; }),
+            tap(data => { 
+                if (data && data.length > 0) {
+                    this.products = data.map(p => ({
+                      ...p, 
+                      id: p.id || (p as any)._id, 
+                      stock: p.stock ?? 50,
+                      reviews: p.reviews || this.generateMockReviews()
+                    }));
+                }
+            }),
             catchError(() => of(this.products.slice(0, 4)))
         );
     }
@@ -2068,20 +2081,22 @@ export class ProductService {
     }
 
     addReview(productId: string, review: Review) {
+        // Optimistic UI update
         const product = this.products.find(p => p.id === productId);
         if (product) {
-            if (!product.reviews) {
-                product.reviews = [];
-            }
+            if (!product.reviews) product.reviews = [];
             product.reviews.unshift(review);
-
-            // Recalculate rating
+            
             const totalRating = product.reviews.reduce((acc, r) => acc + r.rating, 0);
             product.rating = totalRating / product.reviews.length;
-
-            // Recalculate reviewsCount
             product.reviewsCount = product.reviews.length;
         }
+
+        // Persist to backend
+        this.http.post(`${this.apiUrl}/products/${productId}/reviews`, review).subscribe({
+            next: (res: any) => console.log('Review protocol synchronized with Nexus'),
+            error: (err) => console.error('Nexus Uplink Error: Review not persisted', err)
+        });
     }
 
     updateStock(productId: string, quantityToDeduct: number) {
@@ -2096,5 +2111,21 @@ export class ProductService {
             { id: 'r1', userId: 'u1', userName: 'Alex K.', rating: 5, comment: 'Incredible performance!', date: new Date() },
             { id: 'r2', userId: 'u2', userName: 'Sarah J.', rating: 4, comment: 'Great value for money.', date: new Date() }
         ];
+    }
+
+    // Admin Command Protocols
+    addProduct(product: Product): Observable<Product> {
+        return this.http.post<Product>(`${this.apiUrl}/admin/products`, product);
+    }
+
+    updateProduct(id: string, updates: Partial<Product>): Observable<Product | null> {
+        return this.http.put<Product>(`${this.apiUrl}/admin/products/${id}`, updates);
+    }
+
+    deleteProduct(id: string): Observable<boolean> {
+        return this.http.delete<any>(`${this.apiUrl}/admin/products/${id}`).pipe(
+            map(() => true),
+            catchError(() => of(false))
+        );
     }
 }
